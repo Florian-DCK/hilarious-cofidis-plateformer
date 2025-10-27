@@ -1,0 +1,108 @@
+import { NextPage } from 'next';
+import { useTranslations } from 'next-intl';
+
+const Page: NextPage = () => {
+	const t = useTranslations('Register');
+	return (
+		<div>
+			<h1 className=" text-3xl font-sans text-center mt-15 mb-15">
+				{t.rich('title', {
+					br: () => <br />,
+				})}
+			</h1>
+			<form className="max-w-7xl mx-auto p-8 bg-white rounded-lg drop-shadow-2xl shadow-xl flex flex-col gap-8">
+				<div className="flex gap-8">
+					<label className="flex items-center gap-2">
+						<input
+							type="radio"
+							name="civility"
+							value="madame"
+							className="accent-red-600"
+						/>
+						Madame
+					</label>
+					<label className="flex items-center gap-2">
+						<input
+							type="radio"
+							name="civility"
+							value="monsieur"
+							className="accent-red-600"
+						/>
+						Monsieur
+					</label>
+				</div>
+				<div className="flex gap-16">
+					<input
+						type="text"
+						name="firstname"
+						placeholder="Prénom"
+						className="flex-1 border rounded px-3 py-2"
+					/>
+					<input
+						type="text"
+						name="lastname"
+						placeholder="Nom"
+						className="flex-1 border rounded px-3 py-2"
+					/>
+				</div>
+				<div className="flex gap-16 items-end">
+					<input
+						type="email"
+						name="email"
+						placeholder="E-mail"
+						className="flex-1 border rounded px-3 py-2"
+					/>
+					<div className="flex flex-col flex-1">
+						<input
+							type="date"
+							name="birthdate"
+							placeholder="Date de naissance"
+							className="border rounded px-3 py-2"
+						/>
+						<span className="text-xs text-gray-500 absolute">
+							(+ de 18 ans)
+						</span>
+					</div>
+				</div>
+				<div className="flex gap-8 mt-4">
+					<label className="flex items-start gap-2 flex-1 text-sm">
+						<input
+							type="checkbox"
+							name="accept"
+							className="mt-1 accent-red-600"
+						/>
+						<span>
+							En participant, je reconnais avoir lu et accepté le{' '}
+							<a href="#" className="underline">
+								règlement
+							</a>{' '}
+							du concours et la{' '}
+							<a href="#" className="font-bold underline">
+								politique de confidentialité
+							</a>{' '}
+							de Cofidis.
+						</span>
+					</label>
+					<label className="flex items-start gap-2 flex-1 text-sm">
+						<input
+							type="checkbox"
+							name="offers"
+							className="mt-1 accent-red-600"
+						/>
+						<span>
+							Je confirme qu’il s’agit bien des moyens de contact sur lesquels
+							Cofidis pourrait m’envoyer des offres commerciales.
+						</span>
+					</label>
+				</div>
+				<button
+					type="submit"
+					className="bg-red-600 text-white px-8 py-3 rounded font-bold mt-6 self-center flex items-center gap-2">
+					Valider
+				</button>
+			</form>
+		</div>
+	);
+};
+
+export default Page;

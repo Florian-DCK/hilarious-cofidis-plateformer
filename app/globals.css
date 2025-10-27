@@ -1,26 +1,73 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+	--font-campton: 'Campton', sans-serif;
+	--font-sans: var(--font-campton);
+	--color-red: #cf1039;
+	--color-yellow: #fdca16;
+	--color-blacknews: #3d3d3d;
+	--color-lightgray: #f5f5f5;
+	--color-copygray: #acacac;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+	--font-sans: var(--font-campton);
+	--color-red: #cf1039;
+	--color-yellow: #fdca16;
+	--color-blacknews: #3d3d3d;
+	--color-lightgray: #f5f5f5;
+	--color-copygray: #acacac;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.decoratedRed {
+	position: relative;
+	display: inline-block;
+	color: white;
+	text-transform: uppercase;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.decoratedRed::before {
+	content: '';
+	z-index: -1;
+	display: block;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: calc(100% + 30px);
+	height: calc(100% + 20px);
+	background: var(--color-red);
+	clip-path: polygon(
+		0% 99.02%,
+		2.67% 0%,
+		99.81% 14.35%,
+		99.81% 91.33%,
+		0% 99.02%
+	);
+}
+
+.decoratedYellow {
+	position: relative;
+	display: inline-block;
+	color: black;
+}
+
+.decoratedYellow::before {
+	content: '';
+	z-index: -2;
+	display: block;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: calc(100% + 30px);
+	height: calc(100% + 30px);
+	background: var(--color-yellow);
+	clip-path: polygon(
+		99.92% 99.06%,
+		0% 86.41%,
+		0.36% 13.82%,
+		97.94% 0%,
+		99.92% 99.06%
+	);
 }
