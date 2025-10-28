@@ -270,10 +270,10 @@ export function makeEngine(canvas: HTMLCanvasElement, opts: MakeEngineOpts) {
 				hit(s, false);
 			}
 		});
-	s.rocks = s.rocks.filter((r: Rect) => r.y < WORLD_HEIGHT);
+		s.rocks = s.rocks.filter((r: Rect) => r.y < WORLD_HEIGHT);
 
-	// chute hors écran (au-delà de la hauteur du monde)
-	if (s.player.y > WORLD_HEIGHT) hit(s, true);
+		// chute hors écran (au-delà de la hauteur du monde)
+		if (s.player.y > WORLD_HEIGHT) hit(s, true);
 
 		// caméra: suivi fluide du joueur
 		const viewW = canvas.clientWidth / ZOOM;
