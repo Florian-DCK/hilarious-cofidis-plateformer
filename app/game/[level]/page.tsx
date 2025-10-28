@@ -12,7 +12,8 @@ export default async function LevelPage({
 	if (!resolvedParams || !resolvedParams.level) {
 		return (
 			<div>
-				Erreur : paramètre level manquant. Reçu : {JSON.stringify(resolvedParams)}
+				Erreur : paramètre level manquant. Reçu :{' '}
+				{JSON.stringify(resolvedParams)}
 			</div>
 		);
 	}
