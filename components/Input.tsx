@@ -3,6 +3,8 @@ import React, { useState, useRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
+import { ZodType } from 'zod';
+
 interface InputProps {
 	placeholder?: string;
 	name?: string;
@@ -14,6 +16,8 @@ interface InputProps {
 	required?: boolean;
 	className?: string;
 	type?: string;
+	zodSchema?: ZodType<string | Date>;
+	valid?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -27,11 +31,22 @@ const Input: React.FC<InputProps> = ({
 	className,
 	type,
 	id,
+	zodSchema,
+	valid,
 }) => {
 	const [dateValue, setDateValue] = useState<Date | null>(null);
-	const [isValid, setIsValid] = useState<boolean | null>(null);
+	const [isValid, setIsValid] = useState<boolean | null>(valid ?? null);
+	const [touched, setTouched] = useState(false);
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const datePickerRef = useRef<DatePicker | null>(null);
+
+	// Synchronise l'état local avec la prop valid si elle change
+	React.useEffect(() => {
+		if (typeof valid === 'boolean') {
+			setIsValid(valid);
+			setTouched(true);
+		}
+	}, [valid]);
 
 	const handleDivClick = () => {
 		if (type === 'date' && datePickerRef.current) {
@@ -44,8 +59,17 @@ const Input: React.FC<InputProps> = ({
 
 	const handleDateChange = (date: Date | null) => {
 		setDateValue(date);
-		if (!date && required) {
-			setIsValid(false);
+		setTouched(true);
+		if (!date || date === null) {
+			setIsValid(null);
+		} else if (zodSchema) {
+			// Conversion en JJ/MM/AAAA pour la validation
+			const day = String(date.getDate()).padStart(2, '0');
+			const month = String(date.getMonth() + 1).padStart(2, '0');
+			const year = date.getFullYear();
+			const dateStr = `${day}/${month}/${year}`;
+			const result = zodSchema.safeParse(dateStr);
+			setIsValid(result.success);
 		} else {
 			setIsValid(true);
 		}
@@ -53,12 +77,15 @@ const Input: React.FC<InputProps> = ({
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const val = e.target.value;
+		setTouched(true);
 		if (type === 'date') {
-			// On ne gère pas ici, c'est DatePicker
 			return;
 		}
-		if (required && val === '') {
-			setIsValid(false);
+		if (val === '') {
+			setIsValid(null);
+		} else if (zodSchema) {
+			const result = zodSchema.safeParse(val);
+			setIsValid(result.success);
 		} else {
 			setIsValid(true);
 		}
@@ -66,7 +93,11 @@ const Input: React.FC<InputProps> = ({
 
 	return (
 		<div
-			className={`${className} flex-1 border border-copygray rounded flex justify-between items-center h-16 px-5`}
+			className={`${className} flex-1 border rounded flex justify-between items-center h-16 px-5 ${
+				(touched || typeof valid === 'boolean') && isValid === false
+					? 'border-red-600'
+					: 'border-copygray'
+			}`}
 			onClick={handleDivClick}
 			style={{ cursor: 'text' }}>
 			{type === 'date' ? (
@@ -95,12 +126,14 @@ const Input: React.FC<InputProps> = ({
 					onChange={handleInputChange}
 				/>
 			)}
-			{/* Affichage conditionnel : successIcon si valide, errorIcon si invalide, sinon suffixe */}
-			{isValid === true && successIcon}
-			{isValid === false && errorIcon}
-			{isValid === null && suffixe && (
-				<span className="text-copygray">{suffixe}</span>
-			)}
+			{/* Affichage conditionnel : rien si vide, successIcon si valide, errorIcon si invalide */}
+			{(touched || typeof valid === 'boolean') &&
+				isValid === true &&
+				successIcon}
+			{(touched || typeof valid === 'boolean') &&
+				isValid === false &&
+				errorIcon}
+			{!touched && suffixe && <span className="text-copygray">{suffixe}</span>}
 		</div>
 	);
 };
