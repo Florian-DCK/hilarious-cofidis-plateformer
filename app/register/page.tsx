@@ -1,6 +1,7 @@
 import { NextPage } from 'next';
 import { useTranslations } from 'next-intl';
 import Input from '@/components/Input';
+import Footer from '@/components/Footer';
 
 const Page: NextPage = () => {
 	const t = useTranslations('Register');
@@ -11,7 +12,7 @@ const Page: NextPage = () => {
 					br: () => <br />,
 				})}
 			</h1>
-			<form className="max-w-7xl mx-auto p-8 bg-white rounded-lg drop-shadow-2xl shadow-xl flex flex-col gap-8">
+			<form className="max-w-7xl mx-auto p-16 bg-white rounded-lg shadow-[0_2px_20px_rgba(0,0,0,0.1)] flex flex-col gap-8">
 				<div className="flex gap-8">
 					<label className="flex items-center gap-2">
 						<input
@@ -45,13 +46,13 @@ const Page: NextPage = () => {
 						suffixe="(+ de 18 ans)"
 					/>
 				</div>
-				<hr className=" border-copygray" />
+				<hr className=" border-copygray my-16" />
 				<div className="flex gap-8 mt-4">
 					<label className="flex items-start gap-2 flex-1 text-sm">
 						<input
 							type="checkbox"
 							name="accept"
-							className="mt-1 accent-red-600"
+							className="mt-1 accent-red-600 size-6"
 						/>
 						<span>
 							En participant, je reconnais avoir lu et accepté le{' '}
@@ -69,7 +70,7 @@ const Page: NextPage = () => {
 						<input
 							type="checkbox"
 							name="offers"
-							className="mt-1 accent-red-600"
+							className="mt-1 accent-red-600 size-6"
 						/>
 						<span>
 							Je confirme qu’il s’agit bien des moyens de contact sur lesquels
@@ -83,6 +84,7 @@ const Page: NextPage = () => {
 					Valider
 				</button>
 			</form>
+			<Footer />
 		</div>
 	);
 };

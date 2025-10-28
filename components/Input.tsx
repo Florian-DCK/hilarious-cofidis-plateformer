@@ -30,7 +30,7 @@ const Input: React.FC<InputProps> = ({
 }) => {
 	const [dateValue, setDateValue] = useState<Date | null>(null);
 	const inputRef = useRef<HTMLInputElement | null>(null);
-	const datePickerRef = useRef<any>(null);
+	const datePickerRef = useRef<DatePicker | null>(null);
 
 	const handleDivClick = () => {
 		if (type === 'date' && datePickerRef.current) {
