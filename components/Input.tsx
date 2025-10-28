@@ -9,7 +9,7 @@ interface InputProps {
 	value?: string;
 	id?: string;
 	suffixe?: string;
-	confirmationIcon?: React.ReactNode;
+	successIcon?: React.ReactNode;
 	errorIcon?: React.ReactNode;
 	required?: boolean;
 	className?: string;
@@ -19,7 +19,7 @@ interface InputProps {
 const Input: React.FC<InputProps> = ({
 	placeholder,
 	suffixe,
-	confirmationIcon,
+	successIcon,
 	errorIcon,
 	required,
 	name,
@@ -29,16 +29,38 @@ const Input: React.FC<InputProps> = ({
 	id,
 }) => {
 	const [dateValue, setDateValue] = useState<Date | null>(null);
+	const [isValid, setIsValid] = useState<boolean | null>(null);
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const datePickerRef = useRef<DatePicker | null>(null);
 
 	const handleDivClick = () => {
 		if (type === 'date' && datePickerRef.current) {
-			// Focus sur l'input du DatePicker
 			const input = datePickerRef.current.input;
 			if (input) input.focus();
 		} else if (inputRef.current) {
 			inputRef.current.focus();
+		}
+	};
+
+	const handleDateChange = (date: Date | null) => {
+		setDateValue(date);
+		if (!date && required) {
+			setIsValid(false);
+		} else {
+			setIsValid(true);
+		}
+	};
+
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const val = e.target.value;
+		if (type === 'date') {
+			// On ne gère pas ici, c'est DatePicker
+			return;
+		}
+		if (required && val === '') {
+			setIsValid(false);
+		} else {
+			setIsValid(true);
 		}
 	};
 
@@ -51,7 +73,7 @@ const Input: React.FC<InputProps> = ({
 				<DatePicker
 					ref={datePickerRef}
 					selected={dateValue}
-					onChange={(date) => setDateValue(date)}
+					onChange={handleDateChange}
 					placeholderText={placeholder || 'JJ / MM / AAAA'}
 					dateFormat="dd / MM / yyyy"
 					className="w-full h-full outline-none bg-transparent "
@@ -70,11 +92,15 @@ const Input: React.FC<InputProps> = ({
 					value={value}
 					id={id}
 					className="w-full h-full outline-none bg-transparent"
+					onChange={handleInputChange}
 				/>
 			)}
-			{suffixe && <span className="text-copygray">{suffixe}</span>}
-			{confirmationIcon}
-			{errorIcon}
+			{/* Affichage conditionnel : successIcon si valide, errorIcon si invalide, sinon suffixe */}
+			{isValid === true && successIcon}
+			{isValid === false && errorIcon}
+			{isValid === null && suffixe && (
+				<span className="text-copygray">{suffixe}</span>
+			)}
 		</div>
 	);
 };

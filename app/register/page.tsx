@@ -2,6 +2,8 @@ import { NextPage } from 'next';
 import { useTranslations } from 'next-intl';
 import Input from '@/components/Input';
 import Footer from '@/components/Footer';
+import Button from '@/components/Button';
+import Success from '@/components/svg/Success';
 
 const Page: NextPage = () => {
 	const t = useTranslations('Register');
@@ -14,36 +16,56 @@ const Page: NextPage = () => {
 			</h1>
 			<form className="max-w-7xl mx-auto p-16 bg-white rounded-lg shadow-[0_2px_20px_rgba(0,0,0,0.1)] flex flex-col gap-8">
 				<div className="flex gap-8">
-					<label className="flex items-center gap-2">
+					<label className="flex items-center gap-2 cursor-pointer relative">
 						<input
 							type="radio"
 							name="civility"
 							value="madame"
-							className="accent-red-600"
+							className="custom-radio-input"
 						/>
+						<span className="custom-radio"></span>
 						Madame
 					</label>
-					<label className="flex items-center gap-2">
+					<label className="flex items-center gap-2 cursor-pointer relative">
 						<input
 							type="radio"
 							name="civility"
 							value="monsieur"
-							className="accent-red-600"
+							className="custom-radio-input"
 						/>
+						<span className="custom-radio"></span>
 						Monsieur
 					</label>
 				</div>
 				<div className="flex gap-16">
-					<Input placeholder="Prénom" name="firstname" required />
-					<Input placeholder="Nom" name="lastname" required />
+					<Input
+						placeholder="Prénom"
+						name="firstname"
+						required
+						successIcon={<Success />}
+					/>
+					<Input
+						placeholder="Nom"
+						name="lastname"
+						required
+						successIcon={<Success />}
+					/>
 				</div>
 				<div className="flex gap-16 items-end">
-					<Input placeholder="E-mail" name="email" type="email" required />
+					<Input
+						placeholder="E-mail"
+						name="email"
+						type="email"
+						required
+						successIcon={<Success />}
+					/>
 					<Input
 						placeholder="Date de naissance"
 						name="birthdate"
 						type="date"
 						suffixe="(+ de 18 ans)"
+						required
+						successIcon={<Success />}
 					/>
 				</div>
 				<hr className=" border-copygray my-16" />
@@ -78,11 +100,9 @@ const Page: NextPage = () => {
 						</span>
 					</label>
 				</div>
-				<button
-					type="submit"
-					className="bg-red-600 text-white px-8 py-3 rounded font-bold mt-6 self-center flex items-center gap-2">
+				<Button className="w-min mx-auto" type="submit">
 					Valider
-				</button>
+				</Button>
 			</form>
 			<Footer />
 		</div>
