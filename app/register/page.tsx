@@ -1,5 +1,6 @@
 import { NextPage } from 'next';
 import { useTranslations } from 'next-intl';
+import Input from '@/components/Input';
 
 const Page: NextPage = () => {
 	const t = useTranslations('Register');
@@ -32,38 +33,19 @@ const Page: NextPage = () => {
 					</label>
 				</div>
 				<div className="flex gap-16">
-					<input
-						type="text"
-						name="firstname"
-						placeholder="Prénom"
-						className="flex-1 border rounded px-3 py-2"
-					/>
-					<input
-						type="text"
-						name="lastname"
-						placeholder="Nom"
-						className="flex-1 border rounded px-3 py-2"
-					/>
+					<Input placeholder="Prénom" name="firstname" required />
+					<Input placeholder="Nom" name="lastname" required />
 				</div>
 				<div className="flex gap-16 items-end">
-					<input
-						type="email"
-						name="email"
-						placeholder="E-mail"
-						className="flex-1 border rounded px-3 py-2"
+					<Input placeholder="E-mail" name="email" type="email" required />
+					<Input
+						placeholder="Date de naissance"
+						name="birthdate"
+						type="date"
+						suffixe="(+ de 18 ans)"
 					/>
-					<div className="flex flex-col flex-1">
-						<input
-							type="date"
-							name="birthdate"
-							placeholder="Date de naissance"
-							className="border rounded px-3 py-2"
-						/>
-						<span className="text-xs text-gray-500 absolute">
-							(+ de 18 ans)
-						</span>
-					</div>
 				</div>
+				<hr className=" border-copygray" />
 				<div className="flex gap-8 mt-4">
 					<label className="flex items-start gap-2 flex-1 text-sm">
 						<input

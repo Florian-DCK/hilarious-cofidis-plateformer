@@ -1,4 +1,10 @@
+/* Forcer l'input de react-datepicker à prendre toute la largeur */
+.react-datepicker__input-container input {
+	width: 100% !important;
+	box-sizing: border-box;
+}
 @import 'tailwindcss';
+@import 'react-datepicker/dist/react-datepicker.css';
 
 :root {
 	--font-campton: 'Campton', sans-serif;
@@ -17,6 +23,12 @@
 	--color-blacknews: #3d3d3d;
 	--color-lightgray: #f5f5f5;
 	--color-copygray: #acacac;
+}
+
+input[type='date']::-webkit-inner-spin-button,
+input[type='date']::-webkit-calendar-picker-indicator {
+	display: none;
+	-webkit-appearance: none;
 }
 
 .decoratedRed {
