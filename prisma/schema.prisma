@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  surname   String
+  gender    Gender
+  email     String   @unique
+  birthdate DateTime
+  inscription_date DateTime @default(now())
+  subsidary String?
+  gameTry   GameTry[]
+}
+
+model GameTry {
+  user User @relation(fields: [user_id], references: [id])
+  user_id    Int
+  id       Int      @id @default(autoincrement())
+  FirstLevelStars Int?
+  SecondLevelStars Int?
+  ThirdLevelStars Int?
+  FourthLevelStars Int?
+  FinishedAt DateTime?
+}
+
+enum Gender{
+  MALE
+  FEMALE
+}
