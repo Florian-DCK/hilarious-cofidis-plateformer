@@ -8,10 +8,11 @@ import Footer from '@/components/Footer';
 import Button from '@/components/Button';
 import Success from '@/components/svg/Success';
 import Error from '@/components/svg/Error';
-import z, { set } from 'zod';
+import { useRouter } from 'next/navigation';
+import z from 'zod';
 
 const Page: NextPage = () => {
-	// Schémas Zod individuels pour chaque champ
+	const router = useRouter();
 	const [isLoading, setIsLoading] = useState(false);
 	const firstnameSchema = z.string().min(1);
 	const lastnameSchema = z.string().min(1);
@@ -46,11 +47,10 @@ const Page: NextPage = () => {
 	}>({});
 	const successSubmit = () => {
 		setIsLoading(false);
-		alert('Registration successful!');
+		router.push('/game');
 	};
 	const errorSubmit = (error: Error) => {
 		setIsLoading(false);
-		// console.error(error);
 	};
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
