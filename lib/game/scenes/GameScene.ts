@@ -6,6 +6,7 @@ export class GameScene extends Phaser.Scene {
   private coyoteTimer = 0;
   private jumpBufferTimer = 0;
   private isJumping = false;
+  private debugKey?: Phaser.Input.Keyboard.Key;
 
   constructor() {
     super({ key: "GameScene" });
@@ -95,6 +96,43 @@ export class GameScene extends Phaser.Scene {
     this.cursors = this.input.keyboard!.createCursorKeys();
     this.cameras.main.startFollow(this.player);
 
+    this.debugKey = this.input.keyboard!.addKey(
+      Phaser.Input.Keyboard.KeyCodes.D
+    );
+    this.physics.world.createDebugGraphic();
+    this.physics.world.drawDebug = false;
+
+    this.events.on("postupdate", () => {
+      if (this.physics.world.drawDebug) {
+        const debugGraphic = this.physics.world.debugGraphic;
+        debugGraphic.clear();
+
+        // Draw dynamic bodies (player, etc.)
+        debugGraphic.fillStyle(0xff0000, 0.25); // Red fill
+        debugGraphic.lineStyle(1, 0xff0000, 1); // Red outline
+        this.physics.world.bodies.entries.forEach(
+          (body: Phaser.Physics.Arcade.Body) => {
+            if (body.gameObject) {
+              debugGraphic.fillRect(body.x, body.y, body.width, body.height);
+              debugGraphic.strokeRect(body.x, body.y, body.width, body.height);
+            }
+          }
+        );
+
+        // Draw static bodies (platforms)
+        debugGraphic.fillStyle(0x0000ff, 0.25); // Blue fill
+        debugGraphic.lineStyle(1, 0x0000ff, 1); // Blue outline
+        this.physics.world.staticBodies.entries.forEach(
+          (body: Phaser.Physics.Arcade.StaticBody) => {
+            if (body.gameObject) {
+              debugGraphic.fillRect(body.x, body.y, body.width, body.height);
+              debugGraphic.strokeRect(body.x, body.y, body.width, body.height);
+            }
+          }
+        );
+      }
+    });
+
     const CAMERA_DEFAULT_ZOOM = 0.6;
     this.cameras.main.setZoom(CAMERA_DEFAULT_ZOOM);
 
@@ -114,6 +152,13 @@ export class GameScene extends Phaser.Scene {
 
   update(time: number, delta: number) {
     if (!this.player || !this.cursors) return;
+
+    if (this.debugKey && Phaser.Input.Keyboard.JustDown(this.debugKey)) {
+      this.physics.world.drawDebug = !this.physics.world.drawDebug;
+      if (!this.physics.world.drawDebug) {
+        this.physics.world.debugGraphic.clear();
+      }
+    }
 
     const body = this.player.body as Phaser.Physics.Arcade.Body | undefined;
     if (!body) return;
