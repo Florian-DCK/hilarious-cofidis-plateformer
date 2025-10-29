@@ -31,7 +31,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   private initPhysics() {
     const body = this.body as Phaser.Physics.Arcade.Body;
     body.setSize(this.width * 0.6, this.height);
-    body.setDragX(800);
+    body.setDragX(2300);
     body.setMaxVelocity(800, 4000);
     this.setCollideWorldBounds(true);
   }

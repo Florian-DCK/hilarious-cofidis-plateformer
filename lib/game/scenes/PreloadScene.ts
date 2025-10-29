@@ -14,6 +14,8 @@ export class PreloadScene extends Phaser.Scene {
     });
 
     this.load.tilemapTiledJSON("level_map", "/image/assets/level-1.json");
+
+    this.load.image("sun", "/image/assets/level-1-sun.png");
   }
 
   create() {

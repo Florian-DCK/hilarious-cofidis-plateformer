@@ -1,9 +1,11 @@
 import * as Phaser from "phaser";
 import { Player } from "../entities/Player";
+import { Sun } from "../entities/Sun";
 import { Debug } from "../utils/Debug";
 
 export class GameScene extends Phaser.Scene {
   private player?: Player;
+  private suns!: Phaser.Physics.Arcade.StaticGroup;
   private debug?: Debug;
   private collisionGroup?: Phaser.Physics.Arcade.StaticGroup;
   private platformDebugGraphics?: Phaser.GameObjects.Graphics;
@@ -41,9 +43,8 @@ export class GameScene extends Phaser.Scene {
   }
 
   create() {
-    // Instancier le débogage en premier
     this.debug = new Debug(this);
-    this.platformDebugGraphics = this.add.graphics().setDepth(98); // Juste en dessous du joueur
+    this.platformDebugGraphics = this.add.graphics().setDepth(98);
 
     const map = this.make.tilemap({ key: "level_map" });
 
@@ -95,6 +96,18 @@ export class GameScene extends Phaser.Scene {
       this
     );
 
+    this.suns = this.physics.add.staticGroup({
+      classType: Sun,
+    });
+
+    this.physics.add.overlap(
+      this.player,
+      this.suns,
+      this.handleCollectSun,
+      undefined,
+      this
+    );
+
     this.cameras.main.startFollow(this.player);
 
     // this.debug = new Debug(this); // <-- Supprimez cette ligne
@@ -116,6 +129,15 @@ export class GameScene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
   }
 
+  private handleCollectSun(player: any, sun: any) {
+    // On s'assure que l'objet est bien une instance de notre classe Sun
+    const sunObject = sun as Sun;
+    sunObject.collect();
+
+    // Vous pouvez aussi augmenter un score ici
+    // par exemple : this.score += 10; this.scoreText.setText('Score: ' + this.score);
+  }
+
   private drawPlatformDebugFill() {
     if (!this.platformDebugGraphics) return;
 
@@ -133,10 +155,10 @@ export class GameScene extends Phaser.Scene {
 
         const isPassable = (platform as any).getData("passable");
         if (isPassable) {
-          this.platformDebugGraphics.fillStyle(passableColor, 0.5);
+          this.platformDebugGraphics?.fillStyle(passableColor, 0.5);
         }
 
-        this.platformDebugGraphics.fillRect(
+        this.platformDebugGraphics?.fillRect(
           body.x,
           body.y,
           body.width,
@@ -145,7 +167,7 @@ export class GameScene extends Phaser.Scene {
 
         // Revenir à la couleur par défaut pour la prochaine plateforme
         if (isPassable) {
-          this.platformDebugGraphics.fillStyle(0x0f08ff, 0.5);
+          this.platformDebugGraphics?.fillStyle(0x0f08ff, 0.5);
         }
       });
     }
