@@ -1,0 +1,82 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import * as Phaser from "phaser";
+
+import { PreloadScene } from "@/lib/game/scenes/PreloadScene";
+import { GameScene } from "@/lib/game/scenes/GameScene";
+
+export default function PhaserGame() {
+  const gameInstance = useRef<Phaser.Game | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (gameInstance.current) return;
+
+    const container = containerRef.current!;
+    const computeAvailableHeight = () => {
+      const top = container?.getBoundingClientRect().top ?? 0;
+      return Math.max(100, window.innerHeight - top);
+    };
+
+    const initialHeight = computeAvailableHeight();
+    if (container) {
+      container.style.width = "100%";
+      container.style.height = `${initialHeight}px`;
+    }
+
+    const config: Phaser.Types.Core.GameConfig = {
+      type: Phaser.AUTO,
+      parent: container ? container.id : "game-container",
+
+      scale: {
+        mode: Phaser.Scale.RESIZE,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        width: window.innerWidth,
+        height: initialHeight,
+      },
+
+      physics: {
+        default: "arcade",
+        arcade: {
+          gravity: { x: 0, y: 2200 },
+          debug: false,
+        },
+      },
+
+      scene: [PreloadScene, GameScene],
+    };
+
+    const game = new Phaser.Game(config);
+    gameInstance.current = game;
+
+    const onResize = () => {
+      const newHeight = computeAvailableHeight();
+      if (container) container.style.height = `${newHeight}px`;
+      if (gameInstance.current && gameInstance.current.scale) {
+        gameInstance.current.scale.resize(window.innerWidth, newHeight);
+      }
+    };
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      window.removeEventListener("resize", onResize);
+      if (gameInstance.current) {
+        gameInstance.current.destroy(true);
+        gameInstance.current = null;
+      }
+    };
+  }, []);
+
+  return (
+    <div
+      id="game-container"
+      ref={containerRef}
+      style={{
+        width: "100%",
+        height: "300px",
+        position: "relative",
+      }}
+    />
+  );
+}
