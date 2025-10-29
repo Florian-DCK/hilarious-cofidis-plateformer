@@ -83,6 +83,7 @@ export class GameScene extends Phaser.Scene {
 
     this.player = this.physics.add.sprite(100, 100, "player", 0);
     const body = this.player.body as Phaser.Physics.Arcade.Body;
+    body.setSize(this.player.width * 0.6, this.player.height);
     body.setDragX(800);
     body.setMaxVelocity(800, 4000);
     this.physics.add.collider(
