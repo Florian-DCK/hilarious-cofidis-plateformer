@@ -40,7 +40,13 @@ export default function PhaserGame() {
         default: "arcade",
         arcade: {
           gravity: { x: 0, y: 2200 },
-          debug: false,
+          debug: true,
+          debugShowBody: true,
+          debugShowStaticBody: true,
+          debugBodyColor: 0x00ff00,
+          debugStaticBodyColor: 0x0f08ff,
+          debugShowVelocity: true,
+          debugVelocityColor: 0xff1008,
         },
       },
 
