@@ -6,9 +6,17 @@ import { Debug } from "../utils/Debug";
 export class GameScene extends Phaser.Scene {
   private player?: Player;
   private suns!: Phaser.Physics.Arcade.StaticGroup;
+  private sunsCount: number = 0;
+  private health: number = 4;
   private debug?: Debug;
   private collisionGroup?: Phaser.Physics.Arcade.StaticGroup;
   private platformDebugGraphics?: Phaser.GameObjects.Graphics;
+
+  private bgSky?: Phaser.GameObjects.Image;
+  private bgMountains?: Phaser.GameObjects.Image;
+  private bgTreesFar?: Phaser.GameObjects.Image;
+  private bgClouds?: Phaser.GameObjects.Image;
+  private foregroundLayer?: Phaser.GameObjects.Image;
 
   constructor() {
     super({ key: "GameScene" });
@@ -47,8 +55,35 @@ export class GameScene extends Phaser.Scene {
     this.platformDebugGraphics = this.add.graphics().setDepth(98);
 
     const map = this.make.tilemap({ key: "level_map" });
+    const worldHeight = map.heightInPixels;
+    const worldWidth = map.widthInPixels;
 
-    this.add.image(0, map.heightInPixels, "level_bg").setOrigin(0, 1);
+    const CAMERA_DEFAULT_ZOOM = 0.6;
+    this.cameras.main.setZoom(CAMERA_DEFAULT_ZOOM);
+
+    this.bgSky = this.add.image(0, worldHeight, "sky").setOrigin(0, 1);
+    this.bgSky.setScrollFactor(1);
+
+    this.bgClouds = this.add
+      .image(0, worldHeight / 4, "clouds")
+      .setOrigin(0, 1);
+    this.bgClouds.setScrollFactor(0.3);
+
+    this.bgMountains = this.add
+      .image(-200, worldHeight, "mountains")
+      .setOrigin(0, 1)
+      .setScale(2);
+    this.bgMountains.setScrollFactor(0.75);
+
+    this.bgTreesFar = this.add
+      .image(0, worldHeight, "trees")
+      .setOrigin(0, 1)
+      .setScale(1.5);
+    this.bgTreesFar.setScrollFactor(1);
+
+    this.foregroundLayer = this.add
+      .image(0, worldHeight, "level_bg")
+      .setOrigin(0, 1);
 
     const collisionLayer =
       map.getObjectLayer("Collisions") ??
@@ -100,6 +135,19 @@ export class GameScene extends Phaser.Scene {
       classType: Sun,
     });
 
+    const sunsLayer = map.getObjectLayer("Suns");
+    if (sunsLayer) {
+      sunsLayer.objects.forEach((sunObject) => {
+        if (sunObject.x && sunObject.y) {
+          const sun = this.suns.get(sunObject.x, sunObject.y);
+          if (sun) {
+            sun.setOrigin(0, 1);
+            sun.refreshBody();
+          }
+        }
+      });
+    }
+
     this.physics.add.overlap(
       this.player,
       this.suns,
@@ -111,9 +159,6 @@ export class GameScene extends Phaser.Scene {
     this.cameras.main.startFollow(this.player);
 
     // this.debug = new Debug(this); // <-- Supprimez cette ligne
-
-    const CAMERA_DEFAULT_ZOOM = 0.6;
-    this.cameras.main.setZoom(CAMERA_DEFAULT_ZOOM);
 
     this.physics.world.setBounds(
       0,
@@ -127,15 +172,18 @@ export class GameScene extends Phaser.Scene {
     );
     this.player.setCollideWorldBounds(true);
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+
+    this.scene.launch("UIScene");
+    this.events.emit("sunsChanged", this.sunsCount);
+    this.events.emit("healthChanged", this.health);
   }
 
   private handleCollectSun(player: any, sun: any) {
     // On s'assure que l'objet est bien une instance de notre classe Sun
     const sunObject = sun as Sun;
     sunObject.collect();
-
-    // Vous pouvez aussi augmenter un score ici
-    // par exemple : this.score += 10; this.scoreText.setText('Score: ' + this.score);
+    this.sunsCount++;
+    this.events.emit("sunsChanged", this.sunsCount);
   }
 
   private drawPlatformDebugFill() {
@@ -183,5 +231,14 @@ export class GameScene extends Phaser.Scene {
     // La logique de débogage est gérée séparément.
     this.debug.update();
     this.drawPlatformDebugFill();
+    // if (this.bgSky) {
+    //   this.bgSky.tilePositionX = this.cameras.main.scrollX * 0.1; // Bouge très lentement
+    // }
+    // if (this.bgMountains) {
+    //   this.bgMountains.tilePositionX = this.cameras.main.scrollX * 0.25; // Bouge un peu
+    // }
+    // if (this.bgTreesFar) {
+    //   this.bgTreesFar.tilePositionX = this.cameras.main.scrollX * 0.5; // Bouge plus vite
+    // }
   }
 }

@@ -7,6 +7,10 @@ export class PreloadScene extends Phaser.Scene {
 
   preload() {
     this.load.image("level_bg", "/image/assets/level-1-plateformes.png");
+    this.load.image("clouds", "/image/assets/Clouds.png");
+    this.load.image("mountains", "/image/assets/bg-far.png");
+    this.load.image("trees", "/image/assets/bg-near.png");
+    this.load.image("sky", "/image/assets/Sky.png");
 
     this.load.spritesheet("player", "/image/assets/level-1-character.png", {
       frameWidth: 325,
@@ -16,6 +20,9 @@ export class PreloadScene extends Phaser.Scene {
     this.load.tilemapTiledJSON("level_map", "/image/assets/level-1.json");
 
     this.load.image("sun", "/image/assets/level-1-sun.png");
+
+    this.load.image("heart-full", "/image/assets/heart-full.png");
+    this.load.image("heart-empty", "/image/assets/heart-empty.png");
   }
 
   create() {

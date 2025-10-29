@@ -5,6 +5,7 @@ import * as Phaser from "phaser";
 
 import { PreloadScene } from "@/lib/game/scenes/PreloadScene";
 import { GameScene } from "@/lib/game/scenes/GameScene";
+import { UIScene } from "@/lib/game/scenes/UIScene";
 
 export default function PhaserGame() {
   const gameInstance = useRef<Phaser.Game | null>(null);
@@ -50,7 +51,7 @@ export default function PhaserGame() {
         },
       },
 
-      scene: [PreloadScene, GameScene],
+      scene: [PreloadScene, GameScene, UIScene],
     };
 
     const game = new Phaser.Game(config);
