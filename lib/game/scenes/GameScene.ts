@@ -224,9 +224,20 @@ export class GameScene extends Phaser.Scene {
   update(time: number, delta: number) {
     if (!this.player || !this.debug) return;
 
-    // La logique du joueur est maintenant dans sa propre méthode preUpdate,
-    // qui est appelée automatiquement par Phaser.
-    // this.player.update(time, delta);
+    // Vérifier si le joueur tombe dans le vide
+    const voidLimitY = this.physics.world.bounds.height; // Utiliser la hauteur du monde comme limite
+    if (this.player.y > voidLimitY) {
+      this.health -= 1; // Réduire les points de vie
+      this.events.emit("healthChanged", this.health);
+
+      if (this.health <= 0) {
+        // Gérer la fin de partie si les vies atteignent zéro
+        this.scene.start("GameOverScene");
+      } else {
+        // Réinitialiser la position du joueur
+        this.player.setPosition(100, 100); // Position de départ ou checkpoint
+      }
+    }
 
     // La logique de débogage est gérée séparément.
     this.debug.update();

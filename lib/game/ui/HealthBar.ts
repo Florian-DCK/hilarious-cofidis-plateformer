@@ -27,10 +27,11 @@ export class HealthBar extends Phaser.GameObjects.Container {
 
   public setHealth(health: number) {
     for (let i = 0; i < this.maxHealth; i++) {
+      const index = this.maxHealth - 1 - i; // Inverser l'ordre des cœurs
       if (i < health) {
-        this.hearts[i].setTexture("heart-full");
+        this.hearts[index].setTexture("heart-full");
       } else {
-        this.hearts[i].setTexture("heart-empty");
+        this.hearts[index].setTexture("heart-empty").setScale(0.8);
       }
     }
   }
