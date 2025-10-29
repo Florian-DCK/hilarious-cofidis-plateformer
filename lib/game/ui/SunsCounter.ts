@@ -9,12 +9,15 @@ export class SunsCounter extends Phaser.GameObjects.Container {
 
     this.sunsCount = 0;
 
-    const sunImage = this.scene.add.image(0, 0, "sun").setOrigin(0, 0);
+    const sunImage = this.scene.add
+      .image(0, 0, "sun")
+      .setOrigin(0, 0)
+      .setScale(0.5);
 
     this.countText = this.scene.add
       .text(sunImage.displayWidth + 5, sunImage.displayHeight / 2, "x 0", {
-        fontSize: "60px",
-        color: "#fff",
+        fontSize: "55px",
+        color: "#000",
         fontFamily: "Pixelify Sans",
       })
       .setOrigin(0, 0.5);

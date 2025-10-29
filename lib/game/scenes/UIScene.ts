@@ -11,8 +11,8 @@ export class UIScene extends Phaser.Scene {
   }
 
   create() {
-    this.sunsCounter = new SunsCounter(this, 10, 10);
-    this.healthBar = new HealthBar(this, this.cameras.main.width - 170, 10);
+    this.sunsCounter = new SunsCounter(this, 75, 60);
+    this.healthBar = new HealthBar(this, this.cameras.main.width - 200, 85);
 
     const gameScene = this.scene.get("GameScene");
 

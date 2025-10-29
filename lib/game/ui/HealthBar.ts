@@ -16,7 +16,8 @@ export class HealthBar extends Phaser.GameObjects.Container {
     for (let i = 0; i < this.maxHealth; i++) {
       const heart = this.scene.add
         .image(i * 40, 0, "heart-full")
-        .setOrigin(0, 0);
+        .setOrigin(0, 0)
+        .setScale(0.2);
       this.hearts.push(heart);
       this.add(heart);
     }
