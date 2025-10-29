@@ -79,7 +79,7 @@ export class GameScene extends Phaser.Scene {
       .image(0, worldHeight, "trees")
       .setOrigin(0, 1)
       .setScale(1.5);
-    this.bgTreesFar.setScrollFactor(1);
+    this.bgTreesFar.setScrollFactor(0.9);
 
     this.foregroundLayer = this.add
       .image(0, worldHeight, "level_bg")

@@ -7,7 +7,11 @@ import { PreloadScene } from "@/lib/game/scenes/PreloadScene";
 import { GameScene } from "@/lib/game/scenes/GameScene";
 import { UIScene } from "@/lib/game/scenes/UIScene";
 
-export default function PhaserGame() {
+interface PhaserGameProps {
+  level?: string;
+}
+
+export default function PhaserGame({ level }: PhaserGameProps) {
   const gameInstance = useRef<Phaser.Game | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -57,6 +61,8 @@ export default function PhaserGame() {
     const game = new Phaser.Game(config);
     gameInstance.current = game;
 
+    game.scene.start("PreloadScene", { level });
+
     const onResize = () => {
       const newHeight = computeAvailableHeight();
       if (container) container.style.height = `${newHeight}px`;
@@ -73,7 +79,7 @@ export default function PhaserGame() {
         gameInstance.current = null;
       }
     };
-  }, []);
+  }, [level]);
 
   return (
     <div

@@ -5,11 +5,13 @@ type Props = {
   params: { level: string };
 };
 
-export default function JeuPage({ params }: Props) {
+export default async function JeuPage({ params }: Props) {
+  const { level } = await params; // Attendre que `params` soit résolu
+
   return (
     <main>
       <Suspense fallback={<div>Chargement du composant de jeu...</div>}>
-        <GameLoader />
+        <GameLoader level={level} />
       </Suspense>
     </main>
   );
