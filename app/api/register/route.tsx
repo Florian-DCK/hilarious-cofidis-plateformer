@@ -20,6 +20,44 @@ export async function POST(request: Request) {
     }
     const data = parseResult.data;
 
+    // Vérification si l'utilisateur existe déjà
+    const existingUser = await prisma.user.findUnique({
+      where: { email: data.email },
+    });
+
+    if (existingUser) {
+      // L'utilisateur existe déjà donc on vérifie si les données correspondent
+      if (
+        existingUser.name !== data.name ||
+        existingUser.surname !== data.surname ||
+        existingUser.gender !==
+          (data.civility === "madame" ? "FEMALE" : "MALE") ||
+        existingUser.birthdate.getTime() !==
+          (() => {
+            const [day, month, year] = data.birthdate
+              .split(/[\/\-]/)
+              .map((v: string) => Number(v.trim()));
+            return new Date(Date.UTC(year, month - 1, day)).getTime();
+          })()
+      ) {
+        return NextResponse.json(
+          { message: "User data does not match existing record" },
+          { status: 409 }
+        );
+      } else if (existingUser.subsidary === null) {
+        return NextResponse.json(
+          { message: "User exists but subsidary is null" },
+          { status: 422 }
+        );
+      } else {
+        return NextResponse.json(
+          { message: "User already registered and subsidary is not null" },
+          { status: 200 }
+        );
+      }
+    }
+
+    // Création de l'utilisateur dans la BDD si il n'existe pas déjà
     await prisma.user.create({
       data: {
         name: data.name,
