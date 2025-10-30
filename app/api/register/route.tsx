@@ -106,6 +106,9 @@ export async function POST(request: Request) {
             .map((v: string) => Number(v.trim()));
           return new Date(Date.UTC(year, month - 1, day));
         })(),
+        gameTry: {
+          create: {},
+        },
       },
       include: {
         gameTry: true, // Join GameTry data

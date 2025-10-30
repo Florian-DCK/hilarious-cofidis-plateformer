@@ -22,11 +22,11 @@ const StarsCounter: FC<StarsCounterProps> = ({
           style={{ width: `${fillPercentage}%` }}
         >
           <img
-            className="absolute right-0 bottom-2 transform translate-x-1/2 translate-y-1/2"
+            className="absolute right-0 bottom-2 transform translate-x-1/2 translate-y-1/2 w-12 h-12 min-h-12 min-w-12"
             src="image/Sun.png"
             alt="sun"
-          />{" "}
-          <span className="absolute right-0 top-10 transform translate-x-1/2 text-xl font-light">
+          />
+          <span className="absolute right-0 top-10 transform translate-x-1/2 text-xl font-light whitespace-nowrap w-auto">
             {normalizedCount} / {max}
           </span>
         </div>
