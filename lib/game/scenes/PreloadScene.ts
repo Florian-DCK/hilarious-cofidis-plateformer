@@ -18,12 +18,32 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image("trees", `/image/assets/${this.level}/bg-near.png`);
     this.load.image("sky", `/image/assets/${this.level}/Sky.png`);
 
+    // Charger les deux spritesheets séparés
     this.load.spritesheet(
-      "player",
-      `/image/assets/${this.level}/character.png`,
+      "player-idle",
+      `/image/assets/${this.level}/idle.png`,
       {
-        frameWidth: 325,
-        frameHeight: 325,
+        frameWidth: 512,
+        frameHeight: 512,
+      }
+    );
+
+    this.load.spritesheet(
+      "player-jumping",
+      `/image/assets/${this.level}/jumping.png`,
+      {
+        frameWidth: 512,
+        frameHeight: 512,
+        endFrame: this.level == "1" ? 4 : this.level == "2" ? 19 : undefined,
+      }
+    );
+
+    this.load.spritesheet(
+      "player-running",
+      `/image/assets/${this.level}/running.png`,
+      {
+        frameWidth: 512,
+        frameHeight: 512,
       }
     );
 
@@ -56,24 +76,27 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   create() {
+    // Animation idle avec toutes les frames du spritesheet idle
     this.anims.create({
       key: "player-idle",
-      frames: [{ key: "player", frame: 3 }],
-      frameRate: 1,
+      frames: this.anims.generateFrameNames("player-idle"),
+      frameRate: this.level == "2" ? 12 : 24,
       repeat: -1,
     });
 
+    // Animation running avec toutes les frames du spritesheet running
     this.anims.create({
       key: "player-run",
-      frames: this.anims.generateFrameNumbers("player", { start: 0, end: 1 }),
-      frameRate: 12,
+      frames: this.anims.generateFrameNames("player-running"),
+      frameRate: 24,
       repeat: -1,
     });
 
+    // Animation de saut (utilise la première frame du spritesheet idle)
     this.anims.create({
       key: "player-jump",
-      frames: [{ key: "player", frame: 2 }],
-      frameRate: 1,
+      frames: this.anims.generateFrameNames("player-jumping"),
+      frameRate: 24,
       repeat: -1,
     });
 

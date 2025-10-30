@@ -15,7 +15,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   private readonly LOW_JUMP_MULTIPLIER = 1.6;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
-    super(scene, x, y, "player", 0);
+    super(scene, x, y, "player-idle", 0);
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
@@ -30,7 +30,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
   private initPhysics() {
     const body = this.body as Phaser.Physics.Arcade.Body;
-    body.setSize(this.width * 0.6, this.height);
+    body.setSize(150, 256);
     body.setDragX(2300);
     body.setMaxVelocity(800, 4000);
     this.setCollideWorldBounds(true);
