@@ -8,7 +8,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
   private readonly MOVE_SPEED = 600;
   private readonly ACCELERATION = 2400;
-  private readonly JUMP_VELOCITY = -1800;
+  private readonly JUMP_VELOCITY = -2000;
   private readonly COYOTE_TIME = 120;
   private readonly JUMP_BUFFER = 150;
   private readonly FALL_MULTIPLIER = 2.6;

@@ -40,6 +40,9 @@ export class PreloadScene extends Phaser.Scene {
       "heart-empty",
       `/image/assets/${this.level}/heart-empty.png`
     );
+
+    // Charger les textures des obstacles
+    this.load.image("thunder", `/image/assets/${this.level}/thunder.png`);
   }
 
   create() {

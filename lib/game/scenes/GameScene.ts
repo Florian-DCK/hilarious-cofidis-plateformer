@@ -2,12 +2,14 @@ import * as Phaser from "phaser";
 import { Player } from "../entities/Player";
 import { Sun } from "../entities/Sun";
 import { Flag } from "../entities/Flag";
+import { Obstacle } from "../entities/Obstacle";
 import { Debug } from "../utils/Debug";
 
 export class GameScene extends Phaser.Scene {
   private player?: Player;
   private suns!: Phaser.Physics.Arcade.StaticGroup;
   private flags!: Phaser.Physics.Arcade.StaticGroup;
+  private obstacles!: Phaser.Physics.Arcade.StaticGroup;
   private sunsCount: number = 0;
   private health: number = 4;
   private debug?: Debug;
@@ -15,6 +17,8 @@ export class GameScene extends Phaser.Scene {
   private platformDebugGraphics?: Phaser.GameObjects.Graphics;
   private currentLevel: number = 1;
   private levelStartTime: number = 0;
+  private isInvincible: boolean = false;
+  private invincibilityDuration: number = 2000; // 2 secondes d'invincibilité
 
   private bgSky?: Phaser.GameObjects.Image;
   private bgMountains?: Phaser.GameObjects.Image;
@@ -193,6 +197,68 @@ export class GameScene extends Phaser.Scene {
       this
     );
 
+    // Gestion des obstacles
+    this.obstacles = this.physics.add.staticGroup({
+      classType: Obstacle,
+    });
+
+    const obstaclesLayer = map.getObjectLayer("Obstacles");
+    if (obstaclesLayer) {
+      obstaclesLayer.objects.forEach((obstacleObject) => {
+        if (obstacleObject.x && obstacleObject.y) {
+          // Récupérer les propriétés de l'obstacle
+          const props = (obstacleObject.properties as any[]) || [];
+
+          let obstacleType = "thunder";
+          let direction: "horizontal" | "vertical" = "horizontal";
+          let amplitude = 100;
+          let startingPosition = 0;
+
+          props.forEach((prop) => {
+            switch (prop.name) {
+              case "type":
+                obstacleType = prop.value;
+                break;
+              case "direction":
+                direction = prop.value as "horizontal" | "vertical";
+                break;
+              case "amplitude":
+                amplitude = parseFloat(prop.value);
+                break;
+              case "startingPosition":
+                startingPosition = parseFloat(prop.value);
+                break;
+            }
+          });
+
+          // Créer l'obstacle avec les propriétés récupérées
+          const obstacle = this.obstacles.get(
+            obstacleObject.x,
+            obstacleObject.y
+          ) as Obstacle;
+          if (obstacle) {
+            obstacle.setOrigin(0, 1);
+            obstacle.initialize(
+              obstacleType,
+              direction,
+              amplitude,
+              startingPosition
+            );
+            obstacle.refreshBody();
+          }
+        }
+      });
+    }
+
+    // Collision joueur avec obstacles (cause des dégâts)
+    this.physics.add.overlap(
+      this.player,
+      this.obstacles,
+      this.handleObstacleCollision,
+      undefined,
+      this
+    );
+
     this.cameras.main.startFollow(this.player);
 
     // this.debug = new Debug(this); // <-- Supprimez cette ligne
@@ -230,6 +296,53 @@ export class GameScene extends Phaser.Scene {
 
     // Appeler l'API pour terminer le niveau
     this.completeLevel();
+  }
+
+  private handleObstacleCollision(player: any, obstacle: any) {
+    // Si le joueur est invincible, ignorer la collision
+    if (this.isInvincible) {
+      return;
+    }
+
+    // On s'assure que l'objet est bien une instance de notre classe Obstacle
+    const obstacleObject = obstacle as Obstacle;
+
+    // Activer l'invincibilité
+    this.isInvincible = true;
+
+    // Réduire les points de vie du joueur
+    this.health -= 1;
+    this.events.emit("healthChanged", this.health);
+
+    // Effet visuel de dégât avec clignotement pendant l'invincibilité
+    this.tweens.add({
+      targets: this.player,
+      alpha: 0.3,
+      duration: 150,
+      yoyo: true,
+      repeat: -1, // Répéter indéfiniment jusqu'à ce qu'on l'arrête
+      onComplete: () => {
+        if (this.player) {
+          this.player.setAlpha(1);
+        }
+      },
+    });
+
+    // Timer pour désactiver l'invincibilité
+    this.time.delayedCall(this.invincibilityDuration, () => {
+      this.isInvincible = false;
+
+      // Arrêter l'effet de clignotement
+      if (this.player) {
+        this.tweens.killTweensOf(this.player);
+        this.player.setAlpha(1);
+      }
+    });
+
+    // Vérifier si le joueur n'a plus de vie
+    if (this.health <= 0) {
+      this.scene.start("GameOverScene");
+    }
   }
 
   private async completeLevel() {
@@ -311,15 +424,43 @@ export class GameScene extends Phaser.Scene {
           this.platformDebugGraphics?.fillStyle(0x0f08ff, 0.5);
         }
       });
+
+      // Dessiner les obstacles en rouge
+      if (this.obstacles) {
+        this.platformDebugGraphics.fillStyle(0xff0000, 0.7);
+        this.obstacles.children.entries.forEach((obstacle) => {
+          if (obstacle instanceof Obstacle && obstacle.body) {
+            const body = obstacle.body as Phaser.Physics.Arcade.StaticBody;
+            this.platformDebugGraphics?.fillRect(
+              body.x,
+              body.y,
+              body.width,
+              body.height
+            );
+          }
+        });
+      }
     }
   }
 
   update(time: number, delta: number) {
     if (!this.player || !this.debug) return;
 
+    // Mettre à jour tous les obstacles
+    if (this.obstacles) {
+      this.obstacles.children.entries.forEach((obstacle) => {
+        if (obstacle instanceof Obstacle) {
+          obstacle.update(time, delta);
+        }
+      });
+    }
+
     // Vérifier si le joueur tombe dans le vide
     const voidLimitY = this.physics.world.bounds.height; // Utiliser la hauteur du monde comme limite
-    if (this.player.y > voidLimitY) {
+    if (this.player.y > voidLimitY && !this.isInvincible) {
+      // Activer l'invincibilité
+      this.isInvincible = true;
+
       this.health -= 1; // Réduire les points de vie
       this.events.emit("healthChanged", this.health);
 
@@ -329,6 +470,26 @@ export class GameScene extends Phaser.Scene {
       } else {
         // Réinitialiser la position du joueur
         this.player.setPosition(100, 100); // Position de départ ou checkpoint
+
+        // Effet visuel de dégât avec clignotement
+        this.tweens.add({
+          targets: this.player,
+          alpha: 0.3,
+          duration: 150,
+          yoyo: true,
+          repeat: -1, // Répéter indéfiniment jusqu'à ce qu'on l'arrête
+        });
+
+        // Timer pour désactiver l'invincibilité
+        this.time.delayedCall(this.invincibilityDuration, () => {
+          this.isInvincible = false;
+
+          // Arrêter l'effet de clignotement
+          if (this.player) {
+            this.tweens.killTweensOf(this.player);
+            this.player.setAlpha(1);
+          }
+        });
       }
     }
 
