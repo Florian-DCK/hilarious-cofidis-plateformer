@@ -255,11 +255,14 @@ export class GameScene extends Phaser.Scene {
       if (result.success) {
         console.log("Niveau terminé avec succès:", result);
 
-        // Ici, vous pouvez ajouter la logique pour:
-        // - Afficher un écran de victoire
-        // - Passer au niveau suivant
-        // - Sauvegarder le progrès
+        // Vérifier s'il y a une redirection dans la réponse
+        if (result.redirect) {
+          // Rediriger vers la page spécifiée
+          window.location.href = result.redirect;
+          return;
+        }
 
+        // Si pas de redirection, continuer avec la logique habituelle
         // Exemple: transition vers le niveau suivant ou écran de victoire
         this.scene.start("VictoryScene", {
           level: this.currentLevel,
