@@ -36,6 +36,12 @@ export class GameScene extends Phaser.Scene {
     // Récupérer le niveau depuis les données passées à la scène
     this.currentLevel = data?.level || 1;
     this.levelStartTime = Date.now();
+
+    // Réinitialiser toutes les variables d'état
+    this.sunsCount = 0;
+    this.health = 4;
+    this.isInvincible = false;
+    this.movingPlatforms = [];
   }
   private platformCollisionProcess(
     playerGO: Phaser.GameObjects.GameObject,
@@ -86,6 +92,35 @@ export class GameScene extends Phaser.Scene {
   }
 
   create() {
+    // Nettoyer les anciens éléments si ils existent
+    if (this.platformDebugGraphics) {
+      this.platformDebugGraphics.destroy();
+    }
+
+    // Arrêter tous les tweens en cours
+    this.tweens.killAll();
+
+    // Nettoyer les anciens groupes de physics s'ils existent et sont initialisés
+    try {
+      if (this.suns && typeof this.suns.clear === "function") {
+        this.suns.clear(true, true);
+      }
+      if (this.flags && typeof this.flags.clear === "function") {
+        this.flags.clear(true, true);
+      }
+      if (this.obstacles && typeof this.obstacles.clear === "function") {
+        this.obstacles.clear(true, true);
+      }
+      if (
+        this.collisionGroup &&
+        typeof this.collisionGroup.clear === "function"
+      ) {
+        this.collisionGroup.clear(true, true);
+      }
+    } catch (error) {
+      console.warn("Erreur lors du nettoyage des groupes:", error);
+    }
+
     this.debug = new Debug(this);
     this.platformDebugGraphics = this.add.graphics().setDepth(98);
 
@@ -400,7 +435,10 @@ export class GameScene extends Phaser.Scene {
 
     // Vérifier si le joueur n'a plus de vie
     if (this.health <= 0) {
-      this.scene.start("GameOverScene");
+      // Petite pause avant de redémarrer pour que le joueur voie ce qui s'est passé
+      this.time.delayedCall(1000, () => {
+        this.scene.restart({ level: this.currentLevel });
+      });
     }
   }
 
@@ -545,7 +583,25 @@ export class GameScene extends Phaser.Scene {
 
       if (this.health <= 0) {
         // Gérer la fin de partie si les vies atteignent zéro
-        this.scene.start("GameOverScene");
+        // Arrêter l'effet de clignotement et lancer l'écran de fin de partie
+        if (this.player) {
+          this.tweens.killTweensOf(this.player);
+          this.player.setAlpha(1);
+          this.player.setActive(false);
+          this.player.setVisible(false);
+          // Optionnel : désactiver les collisions pour éviter tout comportement résiduel
+          const body = this.player.body as
+            | Phaser.Physics.Arcade.Body
+            | undefined;
+          if (body) {
+            body.enable = false;
+          }
+        }
+
+        // Redémarrer le niveau après une courte pause pour laisser l'animation se terminer
+        this.time.delayedCall(500, () => {
+          this.scene.restart({ level: this.currentLevel });
+        });
       } else {
         // Réinitialiser la position du joueur
         this.player.setPosition(100, 100); // Position de départ ou checkpoint
