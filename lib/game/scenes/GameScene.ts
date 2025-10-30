@@ -1,16 +1,20 @@
 import * as Phaser from "phaser";
 import { Player } from "../entities/Player";
 import { Sun } from "../entities/Sun";
+import { Flag } from "../entities/Flag";
 import { Debug } from "../utils/Debug";
 
 export class GameScene extends Phaser.Scene {
   private player?: Player;
   private suns!: Phaser.Physics.Arcade.StaticGroup;
+  private flags!: Phaser.Physics.Arcade.StaticGroup;
   private sunsCount: number = 0;
   private health: number = 4;
   private debug?: Debug;
   private collisionGroup?: Phaser.Physics.Arcade.StaticGroup;
   private platformDebugGraphics?: Phaser.GameObjects.Graphics;
+  private currentLevel: number = 1;
+  private levelStartTime: number = 0;
 
   private bgSky?: Phaser.GameObjects.Image;
   private bgMountains?: Phaser.GameObjects.Image;
@@ -20,6 +24,12 @@ export class GameScene extends Phaser.Scene {
 
   constructor() {
     super({ key: "GameScene" });
+  }
+
+  init(data: any) {
+    // Récupérer le niveau depuis les données passées à la scène
+    this.currentLevel = data?.level || 1;
+    this.levelStartTime = Date.now();
   }
   private platformCollisionProcess(
     playerGO: Phaser.GameObjects.GameObject,
@@ -156,6 +166,33 @@ export class GameScene extends Phaser.Scene {
       this
     );
 
+    // Gestion des drapeaux
+    this.flags = this.physics.add.staticGroup({
+      classType: Flag,
+    });
+
+    const flagsLayer =
+      map.getObjectLayer("Flag") || map.getObjectLayer("Flags");
+    if (flagsLayer) {
+      flagsLayer.objects.forEach((flagObject) => {
+        if (flagObject.x && flagObject.y) {
+          const flag = this.flags.get(flagObject.x, flagObject.y);
+          if (flag) {
+            flag.setOrigin(0, 1);
+            flag.refreshBody();
+          }
+        }
+      });
+    }
+
+    this.physics.add.overlap(
+      this.player,
+      this.flags,
+      this.handleFlagTrigger,
+      undefined,
+      this
+    );
+
     this.cameras.main.startFollow(this.player);
 
     // this.debug = new Debug(this); // <-- Supprimez cette ligne
@@ -184,6 +221,59 @@ export class GameScene extends Phaser.Scene {
     sunObject.collect();
     this.sunsCount++;
     this.events.emit("sunsChanged", this.sunsCount);
+  }
+
+  private handleFlagTrigger(player: any, flag: any) {
+    // On s'assure que l'objet est bien une instance de notre classe Flag
+    const flagObject = flag as Flag;
+    flagObject.trigger();
+
+    // Appeler l'API pour terminer le niveau
+    this.completeLevel();
+  }
+
+  private async completeLevel() {
+    try {
+      const timeElapsed = Date.now() - this.levelStartTime;
+      const score = this.sunsCount * 100 + Math.max(0, 300000 - timeElapsed); // Bonus temps
+
+      const response = await fetch("/api/game/levelComplete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          level: this.currentLevel,
+          sunsCollected: this.sunsCount,
+          timeElapsed: timeElapsed,
+          score: score,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        console.log("Niveau terminé avec succès:", result);
+
+        // Ici, vous pouvez ajouter la logique pour:
+        // - Afficher un écran de victoire
+        // - Passer au niveau suivant
+        // - Sauvegarder le progrès
+
+        // Exemple: transition vers le niveau suivant ou écran de victoire
+        this.scene.start("VictoryScene", {
+          level: this.currentLevel,
+          sunsCollected: this.sunsCount,
+          score: result.data.score,
+          nextLevel: result.data.nextLevelUnlocked,
+        });
+      } else {
+        console.error("Erreur lors de la completion du niveau:", result.error);
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'appel API:", error);
+      // Gérer l'erreur (peut-être afficher un message à l'utilisateur)
+    }
   }
 
   private drawPlatformDebugFill() {

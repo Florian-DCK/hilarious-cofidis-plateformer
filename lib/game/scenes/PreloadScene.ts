@@ -33,6 +33,7 @@ export class PreloadScene extends Phaser.Scene {
     );
 
     this.load.image("sun", `/image/assets/${this.level}/sun.png`);
+    this.load.image("flag", `/image/assets/${this.level}/flag.png`);
 
     this.load.image("heart-full", `/image/assets/${this.level}/heart-full.png`);
     this.load.image(

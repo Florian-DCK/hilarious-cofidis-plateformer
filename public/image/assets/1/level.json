@@ -688,9 +688,32 @@
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":9,
+         "name":"Flag",
+         "objects":[
+                {
+                 "gid":2,
+                 "height":589,
+                 "id":48,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":261,
+                 "x":10842,
+                 "y":1455
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":9,
- "nextobjectid":47,
+ "nextlayerid":10,
+ "nextobjectid":49,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
@@ -699,6 +722,10 @@
         {
          "firstgid":1,
          "source":"Sun.tsx"
+        }, 
+        {
+         "firstgid":2,
+         "source":"Flag.tsx"
         }],
  "tilewidth":7,
  "type":"map",
