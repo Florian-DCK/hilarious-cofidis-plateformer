@@ -85,7 +85,7 @@ const Page: NextPage = () => {
           imageSrc="/image/level-1.jpg"
           year="1985"
           collectedStars={progress.levels[0].numberOfStarsCollected}
-          maxStars={9}
+          maxStars={10}
           next={progress.nextLevel === "1"}
           disabled={
             progress.nextLevel ? parseInt(progress.nextLevel) < 1 : true
@@ -96,7 +96,7 @@ const Page: NextPage = () => {
           imageSrc="/image/level-2.png"
           year="1995"
           collectedStars={progress.levels[1].numberOfStarsCollected}
-          maxStars={3}
+          maxStars={10}
           next={progress.nextLevel === "2"}
           disabled={
             progress.nextLevel ? parseInt(progress.nextLevel) < 2 : true
@@ -107,7 +107,7 @@ const Page: NextPage = () => {
           imageSrc="/image/level-3.png"
           year="2005"
           collectedStars={progress.levels[2].numberOfStarsCollected}
-          maxStars={3}
+          maxStars={10}
           next={progress.nextLevel === "3"}
           disabled={
             progress.nextLevel ? parseInt(progress.nextLevel) < 3 : true
@@ -118,7 +118,7 @@ const Page: NextPage = () => {
           imageSrc="/image/level-4.png"
           year="2025"
           collectedStars={progress.levels[3].numberOfStarsCollected}
-          maxStars={3}
+          maxStars={10}
           next={progress.nextLevel === "4"}
           disabled={
             progress.nextLevel ? parseInt(progress.nextLevel) < 4 : true
