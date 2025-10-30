@@ -17,13 +17,33 @@ export default async function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL("/register", req.nextUrl));
   }
 
+  // Debug: Log session info for /thanks access
+  if (path === "/thanks") {
+    console.log("DEBUG /thanks access:", {
+      hasUserId: !!session?.userId,
+      finisdhedAt: session?.finisdhedAt,
+      finisdhedAtType: typeof session?.finisdhedAt,
+      finished: !(!session?.finisdhedAt || session?.finisdhedAt === ""),
+    });
+  }
+
   // Redirect to /game if the user is authenticated, on /thanks, and has not finished the game
-  if (path === "/thanks" && session?.userId && !session?.finishedAt) {
+  if (
+    path === "/thanks" &&
+    session?.userId &&
+    (!session?.finisdhedAt || session?.finisdhedAt === "")
+  ) {
+    console.log("DEBUG: Redirecting to /game - user has not finished");
     return NextResponse.redirect(new URL("/game", req.nextUrl));
   }
 
-  // Redirect to /thanks if the user is authenticated, on /game or /game/*, and has finished the game
-  if ((path === "/game" || path.startsWith("/game/")) && session?.finishedAt) {
+  // Redirect to /thanks if the user is authenticated, on /game or /game/*, has finished the game AND has filled subsidary
+  if (
+    (path === "/game" || path.startsWith("/game/")) &&
+    session?.finisdhedAt &&
+    session?.finisdhedAt !== "" &&
+    session?.subsidary
+  ) {
     return NextResponse.redirect(new URL("/thanks", req.nextUrl));
   }
 

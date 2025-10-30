@@ -33,7 +33,8 @@ export async function createSession(
   firstLevelStars?: number,
   secondLevelStars?: number,
   thirdLevelStars?: number,
-  fourthLevelStars?: number
+  fourthLevelStars?: number,
+  subsidary?: string
 ) {
   const expiresAt = new Date("9999-12-31");
   const session = await encrypt({
@@ -45,6 +46,7 @@ export async function createSession(
     secondLevelStars,
     thirdLevelStars,
     fourthLevelStars,
+    subsidary,
     expiresAt,
   });
   const cookieStore = await cookies();

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { PrismaClient } from "../../../generated/prisma/client";
 import { verifySession } from "@/lib/dal";
 import { number } from "zod";
+import { createSession } from "@/lib/session";
 
 export async function POST(request: Request) {
   return new Response("Not implemented", { status: 501 });
@@ -24,15 +25,24 @@ export async function GET(request: Request) {
 
   const prisma = new PrismaClient();
   try {
-    // Fetch user progress
+    // Fetch user progress and user info
     const progress = await prisma.gameTry.findMany({
       where: { user_id: userId },
     });
 
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
     // Extract completed levels based on stars (null = not played, 0+ = completed)
     const completedLevels: string[] = [];
+    let userProgress = null;
     if (progress.length > 0) {
-      const userProgress = progress[0];
+      userProgress = progress[0];
       if (userProgress.FirstLevelStars !== null) completedLevels.push("1");
       if (userProgress.SecondLevelStars !== null) completedLevels.push("2");
       if (userProgress.ThirdLevelStars !== null) completedLevels.push("3");
@@ -76,6 +86,25 @@ export async function GET(request: Request) {
         })(),
       };
     });
+
+    // Refresh session with updated progress information
+    // Only set finishedAt if the user has actually finished the game
+    const finishedAtValue =
+      finished && userProgress?.FinishedAt
+        ? userProgress.FinishedAt.toISOString()
+        : "";
+
+    await createSession(
+      userId.toString(),
+      user.email,
+      finishedAtValue,
+      user.inscription_date.toISOString(),
+      userProgress?.FirstLevelStars || undefined,
+      userProgress?.SecondLevelStars || undefined,
+      userProgress?.ThirdLevelStars || undefined,
+      userProgress?.FourthLevelStars || undefined,
+      user.subsidary || undefined
+    );
 
     return NextResponse.json({
       levels: levelsStatus,

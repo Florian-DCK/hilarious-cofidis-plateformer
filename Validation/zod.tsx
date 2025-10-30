@@ -31,8 +31,9 @@ export const sessionPayloadSchema = z.object({
   secondLevelStars: z.number().min(0).optional(), // Second level stars (optional)
   thirdLevelStars: z.number().min(0).optional(), // Third level stars (optional)
   fourthLevelStars: z.number().min(0).optional(), // Fourth level stars (optional)
-  finisdhedAt: z.string().datetime(), // Which time the user finished the game
+  finisdhedAt: z.string().optional(), // Which time the user finished the game (empty string if not finished)
   createdAt: z.string().datetime(), // Session creation timestamp
+  subsidary: z.string().optional(), // User's subsidary (optional)
   expiresAt: z.date(), // Session expiration timestamp
 });
 

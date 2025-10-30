@@ -77,23 +77,25 @@ const Page: NextPage = () => {
           ? `Niveau ${
               parseInt(progress.nextLevel) - 1
             } terminé ! Continuez comme ça.`
-          : `Félicitations ! Vous avez terminé tous les niveaux !`}
+          : `Vous êtes arrivé au bout ! Passons à l'étape finale.`}
       </p>
       <div className="flex gap-7">
         <LevelCard
           id="1"
           imageSrc="/image/level-1.jpg"
           year="1985"
+          collectedStars={progress.levels[0].numberOfStarsCollected}
           maxStars={9}
           next={progress.nextLevel === "1"}
           disabled={
-            progress.nextLevel ? parseInt(progress.nextLevel) < 1 : false
+            progress.nextLevel ? parseInt(progress.nextLevel) < 1 : true
           }
         />
         <LevelCard
           id="2"
           imageSrc="/image/level-2.png"
           year="1995"
+          collectedStars={progress.levels[1].numberOfStarsCollected}
           maxStars={3}
           next={progress.nextLevel === "2"}
           disabled={
@@ -104,6 +106,7 @@ const Page: NextPage = () => {
           id="3"
           imageSrc="/image/level-3.png"
           year="2005"
+          collectedStars={progress.levels[2].numberOfStarsCollected}
           maxStars={3}
           next={progress.nextLevel === "3"}
           disabled={
@@ -114,6 +117,7 @@ const Page: NextPage = () => {
           id="4"
           imageSrc="/image/level-4.png"
           year="2025"
+          collectedStars={progress.levels[3].numberOfStarsCollected}
           maxStars={3}
           next={progress.nextLevel === "4"}
           disabled={
@@ -123,7 +127,14 @@ const Page: NextPage = () => {
         <RewardCard disabled={progress.finished ? false : true} />
       </div>
       <StarsCounter className="mt-9 mb-9 w-1/2" max={40} count={totalStars} />
-      <Button redirect={`game/${progress.nextLevel}`} className="mt-10 mb-20">
+      <Button
+        redirect={
+          progress && progress.nextLevel
+            ? `game/${progress.nextLevel}`
+            : "/thanks"
+        }
+        className="mt-10 mb-20"
+      >
         Continuer
       </Button>
     </div>
