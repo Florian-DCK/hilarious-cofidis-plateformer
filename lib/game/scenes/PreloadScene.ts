@@ -7,8 +7,8 @@ export class PreloadScene extends Phaser.Scene {
     this.level = level;
   }
 
-  init(data: { level: number }) {
-    this.level = data.level.toString();
+  init(data: { level: string }) {
+    this.level = data.level || "1";
   }
 
   preload() {
@@ -43,6 +43,16 @@ export class PreloadScene extends Phaser.Scene {
 
     // Charger les textures des obstacles
     this.load.image("thunder", `/image/assets/${this.level}/thunder.png`);
+
+    // Charger les textures des plateformes mobiles
+    this.load.image(
+      "plateform1.png",
+      `/image/assets/${this.level}/plateform1.png`
+    );
+    this.load.image(
+      "plateform2.png",
+      `/image/assets/${this.level}/plateform2.png`
+    );
   }
 
   create() {
@@ -67,6 +77,6 @@ export class PreloadScene extends Phaser.Scene {
       repeat: -1,
     });
 
-    this.scene.start("GameScene");
+    this.scene.start("GameScene", { level: parseInt(this.level) });
   }
 }

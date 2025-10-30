@@ -7,9 +7,9 @@ export class Obstacle extends Phaser.Physics.Arcade.Sprite {
   private startingPosition: number;
   private initialX: number;
   private initialY: number;
-  private currentPosition: number = 0; // Position relative au centre (-amplitude/2 à +amplitude/2)
-  private moveDirection: number = 1; // 1 pour aller vers la fin, -1 pour revenir
+  private moveTween?: Phaser.Tweens.Tween;
   private speed: number = 50; // pixels par seconde
+  private duration: number; // durée du mouvement en ms
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     // Utiliser une texture par défaut (sera changée lors de l'initialisation)
@@ -22,9 +22,8 @@ export class Obstacle extends Phaser.Physics.Arcade.Sprite {
     this.startingPosition = 0;
     this.initialX = x;
     this.initialY = y;
-    this.currentPosition = 0;
-    this.moveDirection = 1;
     this.speed = 50;
+    this.duration = 2000; // 2 secondes par défaut
 
     // Ajouter à la scène
     scene.add.existing(this);
@@ -49,22 +48,17 @@ export class Obstacle extends Phaser.Physics.Arcade.Sprite {
     const textureKey = obstacleType === "thunder" ? "thunder" : "obstacle";
     this.setTexture(textureKey);
 
-    // La startingPosition définit le centre du mouvement (en pourcentage de l'amplitude)
-    // L'obstacle oscillera de -amplitude/2 à +amplitude/2 autour de ce centre
-
-    // Calculer la position de départ relative au centre du mouvement
-    // startingPosition = 0% -> commence à -amplitude/2 (extrême gauche/bas)
-    // startingPosition = 50% -> commence au centre (position 0)
-    // startingPosition = 100% -> commence à +amplitude/2 (extrême droite/haut)
-    const relativeStart = this.startingPosition / 100 - 0.5; // -0.5 à +0.5
-    this.currentPosition = relativeStart * this.amplitude; // -amplitude/2 à +amplitude/2
-
-    // Déterminer la direction initiale basée sur la position de départ relative
-    if (this.currentPosition >= 0) {
-      this.moveDirection = -1; // Aller vers l'extrême négatif
-    } else {
-      this.moveDirection = 1; // Aller vers l'extrême positif
+    // Ajuster la vitesse et la durée selon le type d'obstacle
+    switch (obstacleType) {
+      case "thunder":
+        this.speed = 100;
+        break;
+      default:
+        this.speed = 50;
     }
+
+    // Calculer la durée basée sur la vitesse et l'amplitude
+    this.duration = (this.amplitude / this.speed) * 1000; // convertir en ms
 
     // Configurer le corps physique
     const body = this.body as Phaser.Physics.Arcade.StaticBody;
@@ -76,75 +70,90 @@ export class Obstacle extends Phaser.Physics.Arcade.Sprite {
       body.setOffset(this.width * 0.3, this.height * 0.6); // Décaler vers le bas (zone des éclairs)
     }
 
-    // Positionner l'obstacle à sa position de départ
-    this.updatePosition();
-
-    // Ajuster la vitesse selon le type d'obstacle
-    switch (obstacleType) {
-      case "thunder":
-        this.speed = 100;
-        break;
-      default:
-        this.speed = 50;
-    }
+    // Positionner l'obstacle à sa position de départ et démarrer le mouvement
+    this.startMovement();
   }
 
-  private updatePosition(): void {
-    // Calculer le décalage du centre basé sur startingPosition (en pixels)
-    const centerOffsetX =
-      this.direction === "horizontal"
-        ? (this.startingPosition / 100) * this.amplitude - this.amplitude / 2
-        : 0;
-    const centerOffsetY =
-      this.direction === "vertical"
-        ? (this.startingPosition / 100) * this.amplitude - this.amplitude / 2
-        : 0;
+  /**
+   * Démarre le mouvement de l'obstacle avec des tweens
+   */
+  private startMovement(): void {
+    // Nettoyer le tween existant s'il y en a un
+    if (this.moveTween) {
+      this.moveTween.destroy();
+    }
 
-    const newX =
-      this.direction === "horizontal"
-        ? this.initialX + centerOffsetX + this.currentPosition
-        : this.initialX;
-    const newY =
-      this.direction === "vertical"
-        ? this.initialY - (centerOffsetY + this.currentPosition) // Soustraction pour que les valeurs positives aillent vers le haut
-        : this.initialY;
+    // Calculer les positions de début et de fin basées sur l'amplitude et la direction
+    const halfAmplitude = this.amplitude / 2;
 
-    // Utiliser setPosition pour que Phaser gère correctement la mise à jour
-    this.setPosition(newX, newY);
+    let startPos: { x?: number; y?: number } = {};
+    let endPos: { x?: number; y?: number } = {};
 
-    // Mettre à jour explicitement le corps physique statique
+    if (this.direction === "horizontal") {
+      // Calculer le centre du mouvement basé sur startingPosition
+      const centerX =
+        this.initialX +
+        (this.startingPosition / 100) * this.amplitude -
+        halfAmplitude;
+      startPos = { x: centerX - halfAmplitude };
+      endPos = { x: centerX + halfAmplitude };
+
+      // Positionner l'obstacle à sa position de départ
+      const startOffset = (this.startingPosition / 100) * this.amplitude;
+      this.setPosition(
+        this.initialX + startOffset - halfAmplitude,
+        this.initialY
+      );
+    } else {
+      // Direction verticale
+      const centerY =
+        this.initialY -
+        (this.startingPosition / 100) * this.amplitude +
+        halfAmplitude;
+      startPos = { y: centerY + halfAmplitude };
+      endPos = { y: centerY - halfAmplitude };
+
+      // Positionner l'obstacle à sa position de départ
+      const startOffset = (this.startingPosition / 100) * this.amplitude;
+      this.setPosition(
+        this.initialX,
+        this.initialY - startOffset + halfAmplitude
+      );
+    }
+
+    // Créer le tween avec un mouvement de va-et-vient
+    this.moveTween = this.scene.tweens.add({
+      targets: this,
+      ...endPos,
+      duration: this.duration,
+      ease: "Sine.easeInOut", // Mouvement plus fluide
+      yoyo: true, // Retour automatique
+      repeat: -1, // Répétition infinie
+      onUpdate: () => {
+        // Mettre à jour le corps physique à chaque frame
+        this.updatePhysicsBody();
+      },
+    });
+  }
+
+  /**
+   * Met à jour le corps physique statique
+   */
+  private updatePhysicsBody(): void {
     if (this.body) {
       const body = this.body as Phaser.Physics.Arcade.StaticBody;
-
-      // Pour un StaticBody, nous devons mettre à jour manuellement les coordonnées du corps
-      body.x = newX - body.offset.x;
-      body.y = newY - body.offset.y;
-
-      // Mettre à jour les propriétés du corps physique
+      body.x = this.x - body.offset.x;
+      body.y = this.y - body.offset.y;
       body.updateFromGameObject();
     }
   }
 
+  /**
+   * Méthode update simplifiée - les tweens gèrent le mouvement automatiquement
+   */
   public update(time: number, delta: number): void {
-    // Calculer le mouvement basé sur le delta time
-    const moveAmount = (this.speed * delta) / 1000; // convertir ms en secondes
-
-    // Mettre à jour la position courante
-    this.currentPosition += moveAmount * this.moveDirection;
-
-    // Vérifier les limites et inverser la direction si nécessaire
-    // L'obstacle oscille maintenant de -amplitude/2 à +amplitude/2
-    const halfAmplitude = this.amplitude / 2;
-    if (this.currentPosition >= halfAmplitude) {
-      this.currentPosition = halfAmplitude;
-      this.moveDirection = -1;
-    } else if (this.currentPosition <= -halfAmplitude) {
-      this.currentPosition = -halfAmplitude;
-      this.moveDirection = 1;
-    }
-
-    // Mettre à jour la position physique
-    this.updatePosition();
+    // Plus besoin de logique de mouvement manuel, les tweens s'occupent de tout
+    // Cette méthode peut être utilisée pour d'autres logiques si nécessaire
   }
 
   public getObstacleType(): string {
@@ -160,6 +169,59 @@ export class Obstacle extends Phaser.Physics.Arcade.Sprite {
   }
 
   public getCurrentPosition(): number {
-    return this.currentPosition;
+    // Calculer la position relative basée sur la position actuelle de l'obstacle
+    if (this.direction === "horizontal") {
+      const centerX =
+        this.initialX +
+        (this.startingPosition / 100) * this.amplitude -
+        this.amplitude / 2;
+      return this.x - centerX;
+    } else {
+      const centerY =
+        this.initialY -
+        (this.startingPosition / 100) * this.amplitude +
+        this.amplitude / 2;
+      return centerY - this.y;
+    }
+  }
+
+  /**
+   * Pause le mouvement de l'obstacle
+   */
+  public pauseMovement(): void {
+    if (this.moveTween) {
+      this.moveTween.pause();
+    }
+  }
+
+  /**
+   * Reprend le mouvement de l'obstacle
+   */
+  public resumeMovement(): void {
+    if (this.moveTween) {
+      this.moveTween.resume();
+    }
+  }
+
+  /**
+   * Arrête et nettoie le tween de mouvement
+   */
+  public stopMovement(): void {
+    if (this.moveTween) {
+      this.moveTween.destroy();
+      this.moveTween = undefined;
+    }
+  }
+
+  /**
+   * Change la vitesse de l'obstacle en cours de mouvement
+   */
+  public setSpeed(newSpeed: number): void {
+    this.speed = newSpeed;
+    this.duration = (this.amplitude / this.speed) * 1000;
+
+    // Redémarrer le mouvement avec la nouvelle vitesse
+    this.stopMovement();
+    this.startMovement();
   }
 }

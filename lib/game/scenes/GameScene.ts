@@ -3,6 +3,7 @@ import { Player } from "../entities/Player";
 import { Sun } from "../entities/Sun";
 import { Flag } from "../entities/Flag";
 import { Obstacle } from "../entities/Obstacle";
+import { MovingPlateform } from "../entities/MovingPlateform";
 import { Debug } from "../utils/Debug";
 
 export class GameScene extends Phaser.Scene {
@@ -10,6 +11,7 @@ export class GameScene extends Phaser.Scene {
   private suns!: Phaser.Physics.Arcade.StaticGroup;
   private flags!: Phaser.Physics.Arcade.StaticGroup;
   private obstacles!: Phaser.Physics.Arcade.StaticGroup;
+  private movingPlatforms: MovingPlateform[] = [];
   private sunsCount: number = 0;
   private health: number = 4;
   private debug?: Debug;
@@ -41,7 +43,19 @@ export class GameScene extends Phaser.Scene {
   ) {
     const passable =
       (platformGO as any).getData && (platformGO as any).getData("passable");
-    if (!passable) return true;
+    if (!passable) {
+      // Gérer les plateformes mobiles non-passables
+      if (platformGO instanceof MovingPlateform) {
+        const player = playerGO as Phaser.Physics.Arcade.Sprite;
+        const pBody = player.body as Phaser.Physics.Arcade.Body | undefined;
+
+        if (pBody && pBody.velocity.y >= 0 && pBody.touching.down) {
+          // Le joueur atterrit sur la plateforme mobile
+          platformGO.addPlayer(player);
+        }
+      }
+      return true;
+    }
 
     const player = playerGO as Phaser.Physics.Arcade.Sprite;
     const pBody = player.body as Phaser.Physics.Arcade.Body | undefined;
@@ -61,7 +75,14 @@ export class GameScene extends Phaser.Scene {
 
     const platformTop = (platBody as any).y ?? (platBody as any).top ?? 0;
 
-    return isFallingOrDown && prevBottom <= platformTop + EPS;
+    const shouldCollide = isFallingOrDown && prevBottom <= platformTop + EPS;
+
+    // Si c'est une plateforme mobile et que la collision est validée
+    if (shouldCollide && platformGO instanceof MovingPlateform) {
+      platformGO.addPlayer(player);
+    }
+
+    return shouldCollide;
   }
 
   create() {
@@ -112,22 +133,60 @@ export class GameScene extends Phaser.Scene {
         const width = (obj as any).width ?? 0;
         const height = (obj as any).height ?? 0;
 
-        const rect = this.add.rectangle(x, y, width, height).setOrigin(0, 0);
-
         const props = (obj as any).properties;
+        let isMoving = false;
+        let direction: "horizontal" | "vertical" = "horizontal";
+        let amplitude = 100;
+        let startingPosition = 0;
+        let isPassable = false;
+        let texture: string | undefined;
+
+        // Analyser les propriétés
         if (Array.isArray(props)) {
-          const passableProp = props.find(
-            (p: any) => p && p.name === "passable"
-          );
-          if (
-            passableProp &&
-            (passableProp.value === true || passableProp.value === "true")
-          ) {
-            rect.setData("passable", true);
-          }
+          props.forEach((prop) => {
+            switch (prop.name) {
+              case "moving":
+                isMoving = prop.value === true || prop.value === "true";
+                break;
+              case "direction":
+                direction = prop.value as "horizontal" | "vertical";
+                break;
+              case "amplitude":
+                amplitude = parseFloat(prop.value) || 100;
+                break;
+              case "startingPosition":
+                startingPosition = parseFloat(prop.value) || 0;
+                break;
+              case "passable":
+                isPassable = prop.value === true || prop.value === "true";
+                break;
+              case "texture":
+                texture = prop.value;
+                break;
+            }
+          });
         }
 
-        this.collisionGroup!.add(rect);
+        // Si c'est une plateforme mobile, créer une MovingPlatform
+        if (isMoving && texture) {
+          const movingPlatform = new MovingPlateform(this, x, y, texture);
+          movingPlatform.setDisplaySize(width, height);
+          movingPlatform.setData("passable", isPassable);
+          movingPlatform.initialize(
+            direction,
+            amplitude,
+            startingPosition,
+            true
+          );
+
+          this.movingPlatforms.push(movingPlatform);
+          this.collisionGroup!.add(movingPlatform);
+        } else {
+          // Créer une plateforme statique normale
+          const rect = this.add.rectangle(x, y, width, height).setOrigin(0, 0);
+          rect.setData("passable", isPassable);
+          this.collisionGroup!.add(rect);
+        }
       });
     } else {
       console.warn(
@@ -408,7 +467,12 @@ export class GameScene extends Phaser.Scene {
         if (!body) return;
 
         const isPassable = (platform as any).getData("passable");
-        if (isPassable) {
+        const isMovingPlatform = platform instanceof MovingPlateform;
+
+        // Couleur spéciale pour les plateformes mobiles (vert)
+        if (isMovingPlatform) {
+          this.platformDebugGraphics?.fillStyle(0x00ff00, 0.7);
+        } else if (isPassable) {
           this.platformDebugGraphics?.fillStyle(passableColor, 0.5);
         }
 
@@ -420,7 +484,7 @@ export class GameScene extends Phaser.Scene {
         );
 
         // Revenir à la couleur par défaut pour la prochaine plateforme
-        if (isPassable) {
+        if (isMovingPlatform || isPassable) {
           this.platformDebugGraphics?.fillStyle(0x0f08ff, 0.5);
         }
       });
@@ -454,6 +518,21 @@ export class GameScene extends Phaser.Scene {
         }
       });
     }
+
+    // Mettre à jour toutes les plateformes mobiles
+    this.movingPlatforms.forEach((platform) => {
+      platform.update(time, delta);
+
+      // Nettoyer les joueurs qui ne sont plus sur la plateforme
+      if (this.player && platform.hasPlayer(this.player)) {
+        const playerBody = this.player.body as Phaser.Physics.Arcade.Body;
+
+        // Vérifier si le joueur n'est plus en contact avec la plateforme
+        if (playerBody && !playerBody.touching.down) {
+          platform.removePlayer(this.player);
+        }
+      }
+    });
 
     // Vérifier si le joueur tombe dans le vide
     const voidLimitY = this.physics.world.bounds.height; // Utiliser la hauteur du monde comme limite

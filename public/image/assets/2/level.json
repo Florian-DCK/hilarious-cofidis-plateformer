@@ -136,14 +136,39 @@
                  "y":1417
                 }, 
                 {
-                 "height":63.3333,
+                 "height":109.999966666667,
                  "id":11,
                  "name":"",
                  "properties":[
                         {
+                         "name":"amplitude",
+                         "type":"string",
+                         "value":"300"
+                        }, 
+                        {
+                         "name":"direction",
+                         "type":"string",
+                         "value":"vertical"
+                        }, 
+                        {
+                         "name":"moving",
+                         "type":"string",
+                         "value":"true"
+                        }, 
+                        {
                          "name":"passable",
                          "type":"string",
                          "value":"true"
+                        }, 
+                        {
+                         "name":"startingPosition",
+                         "type":"string",
+                         "value":"0"
+                        }, 
+                        {
+                         "name":"texture",
+                         "type":"string",
+                         "value":"plateform1.png"
                         }],
                  "rotation":0,
                  "type":"",
@@ -260,9 +285,34 @@
                  "name":"",
                  "properties":[
                         {
+                         "name":"amplitude",
+                         "type":"string",
+                         "value":"300"
+                        }, 
+                        {
+                         "name":"direction",
+                         "type":"string",
+                         "value":"horizontal"
+                        }, 
+                        {
+                         "name":"moving",
+                         "type":"string",
+                         "value":"true"
+                        }, 
+                        {
                          "name":"passable",
                          "type":"string",
                          "value":"true"
+                        }, 
+                        {
+                         "name":"startingPosition",
+                         "type":"string",
+                         "value":"0"
+                        }, 
+                        {
+                         "name":"texture",
+                         "type":"string",
+                         "value":"plateform2.png"
                         }],
                  "rotation":0,
                  "type":"",
@@ -414,6 +464,29 @@
                 }],
          "offsetx":-245,
          "offsety":0,
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":8,
+         "name":"Flag",
+         "objects":[
+                {
+                 "gid":3,
+                 "height":632,
+                 "id":41,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":260,
+                 "x":11048.6666666667,
+                 "y":1361.33333333333
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -649,8 +722,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":8,
- "nextobjectid":41,
+ "nextlayerid":9,
+ "nextobjectid":42,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
@@ -672,6 +745,10 @@
          "tilecount":1,
          "tileheight":209,
          "tilewidth":200
+        }, 
+        {
+         "firstgid":3,
+         "source":"Flag.tsx"
         }],
  "tilewidth":7,
  "type":"map",
