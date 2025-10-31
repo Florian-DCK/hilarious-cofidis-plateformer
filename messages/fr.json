@@ -47,5 +47,10 @@
     "contactYouSoon": "Nous vous contacterons si vous faites partie des gagnants pour vous remettre le prix en main propre.",
     "betterScore": "Améliorer mon score",
     "subsidaryPlaceholder": "Grammes"
+  },
+  "tutorial": {
+    "title": "Attrapez un maximum de soleils.<br></br>Évitez les trous, les tonnerres et les obstacles.",
+    "instruction": "Déplacez-vous avec les flèches gauche et droite de votre clavier. Sautez avec la flèche du haut.",
+    "button": "Compris"
   }
 }

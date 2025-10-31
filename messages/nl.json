@@ -38,6 +38,11 @@
     "inProgressDescription": "Ga mee op reis door 40 jaar Cofidis met Sunny Marie en verzamel zoveel mogelijk zonnetjes.",
     "startOrContinueGame": "Verdergaan"
   },
+  "tutorial": {
+    "title": "Vang zoveel mogelijk zonnetjes.<br></br>Vermijd de gaten, het onweer en de obstakels.",
+    "instruction": "Beweeg met de pijltjes naar links en rechts op je toetsenbord. Spring met de pijl omhoog.",
+    "button": "Begrepen"
+  },
   "thanks": {
     "loading": "Laden...",
     "subsidaryQuestion": "Schiftingsvraag",

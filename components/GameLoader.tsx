@@ -8,8 +8,9 @@ const PhaserGame = dynamic(() => import("@/components/PhaserGame"), {
 
 interface GameLoaderProps {
   level?: string;
+  paused?: boolean;
 }
 
-export default function GameLoader({ level }: GameLoaderProps) {
-  return <PhaserGame level={level} />;
+export default function GameLoader({ level, paused = false }: GameLoaderProps) {
+  return <PhaserGame level={level} paused={paused} />;
 }

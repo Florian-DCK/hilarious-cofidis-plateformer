@@ -9,9 +9,10 @@ import { UIScene } from "@/lib/game/scenes/UIScene";
 
 interface PhaserGameProps {
   level?: string;
+  paused?: boolean;
 }
 
-export default function PhaserGame({ level }: PhaserGameProps) {
+export default function PhaserGame({ level, paused = false }: PhaserGameProps) {
   const gameInstance = useRef<Phaser.Game | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -58,10 +59,10 @@ export default function PhaserGame({ level }: PhaserGameProps) {
       scene: [PreloadScene, GameScene, UIScene],
     };
 
-    const game = new Phaser.Game(config);
+  const game = new Phaser.Game(config);
     gameInstance.current = game;
 
-    game.scene.start("PreloadScene", { level });
+  game.scene.start("PreloadScene", { level, startPaused: paused });
 
     const onResize = () => {
       const newHeight = computeAvailableHeight();
@@ -80,6 +81,49 @@ export default function PhaserGame({ level }: PhaserGameProps) {
       }
     };
   }, [level]);
+
+  useEffect(() => {
+    const game = gameInstance.current;
+    if (!game) {
+      return;
+    }
+
+    const sceneManager = game.scene;
+    const managedScenes = ["GameScene", "UIScene"];
+
+    const toggleSceneState = (key: string) => {
+      let sceneExists = true;
+      try {
+        sceneManager.getScene(key);
+      } catch (error) {
+        sceneExists = false;
+      }
+
+      if (!sceneExists) {
+        return;
+      }
+
+      const isPaused = typeof sceneManager.isPaused === "function"
+        ? sceneManager.isPaused(key)
+        : false;
+      const isActive = typeof sceneManager.isActive === "function"
+        ? sceneManager.isActive(key)
+        : false;
+
+      if (paused) {
+        if (isActive && !isPaused) {
+          sceneManager.pause(key);
+        }
+        return;
+      }
+
+      if (isPaused) {
+        sceneManager.resume(key);
+      }
+    };
+
+    managedScenes.forEach(toggleSceneState);
+  }, [paused]);
 
   return (
     <div

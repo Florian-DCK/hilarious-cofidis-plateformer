@@ -1,8 +1,8 @@
-import GameLoader from "@/components/GameLoader";
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { verifySession } from "@/lib/dal";
 import { PrismaClient } from "../../../generated/prisma/client";
+import GamePageClient from "./GamePageClient";
 
 type Props = {
   params: { level: string };
@@ -83,7 +83,7 @@ export default async function JeuPage({ params }: Props) {
   return (
     <main>
       <Suspense fallback={<div>Chargement du composant de jeu...</div>}>
-        <GameLoader level={level} />
+        <GamePageClient level={level} showTutorial={level === "1"} />
       </Suspense>
     </main>
   );

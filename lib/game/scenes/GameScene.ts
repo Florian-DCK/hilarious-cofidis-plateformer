@@ -21,6 +21,7 @@ export class GameScene extends Phaser.Scene {
   private levelStartTime: number = 0;
   private isInvincible: boolean = false;
   private invincibilityDuration: number = 2000; // 2 secondes d'invincibilité
+  private startPaused: boolean = false;
 
   private bgSky?: Phaser.GameObjects.Image;
   private bgMountains?: Phaser.GameObjects.Image;
@@ -36,6 +37,7 @@ export class GameScene extends Phaser.Scene {
     // Récupérer le niveau depuis les données passées à la scène
     this.currentLevel = data?.level || 1;
     this.levelStartTime = Date.now();
+    this.startPaused = Boolean(data?.startPaused);
 
     // Réinitialiser toutes les variables d'état
     this.sunsCount = 0;
@@ -371,6 +373,10 @@ export class GameScene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
     this.scene.launch("UIScene");
+    if (this.startPaused) {
+      this.scene.pause();
+      this.scene.pause("UIScene");
+    }
     this.events.emit("sunsChanged", this.sunsCount);
     this.events.emit("healthChanged", this.health);
   }

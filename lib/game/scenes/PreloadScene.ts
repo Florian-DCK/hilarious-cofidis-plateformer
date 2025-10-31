@@ -2,13 +2,16 @@ import * as Phaser from "phaser";
 
 export class PreloadScene extends Phaser.Scene {
   private level: string;
-  constructor(level: string = "1") {
+  private startPaused: boolean;
+  constructor(level: string = "1", startPaused: boolean = false) {
     super({ key: "PreloadScene" });
     this.level = level;
+    this.startPaused = startPaused;
   }
 
-  init(data: { level: string }) {
+  init(data: { level: string; startPaused?: boolean }) {
     this.level = data.level || "1";
+    this.startPaused = Boolean(data.startPaused);
   }
 
   preload() {
@@ -110,6 +113,9 @@ export class PreloadScene extends Phaser.Scene {
       hideOnComplete: false, // Garde la dernière frame visible
     });
 
-    this.scene.start("GameScene", { level: parseInt(this.level) });
+    this.scene.start("GameScene", {
+      level: parseInt(this.level),
+      startPaused: this.startPaused,
+    });
   }
 }
