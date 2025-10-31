@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import Header from "@/components/Header";
 import localFont from "next/font/local";
 import { Pixelify_Sans } from "next/font/google";
+import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -41,15 +42,29 @@ const campton = localFont({
   ],
   variable: "--font-campton",
 });
-export default function RootLayout({
+
+type LocaleCode = "fr" | "nl";
+
+function normalizeLocale(rawLocale: string | undefined): LocaleCode {
+  if (rawLocale === "nl") {
+    return "nl";
+  }
+  return "fr";
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const locale = normalizeLocale(cookieStore.get("locale")?.value);
+  const messages = (await import(`../messages/${locale}.json`)).default;
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body className={` ${campton.variable} ${pixelify.variable} antialiased`}>
-        <NextIntlClientProvider>
+        <NextIntlClientProvider locale={locale} messages={messages}>
           <Header />
           {children}
         </NextIntlClientProvider>

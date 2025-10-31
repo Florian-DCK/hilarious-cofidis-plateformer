@@ -1,5 +1,51 @@
 {
-	"Header": {
-		"CatchPhrase": "Al 40 jaar dé kredietspecialist"
-	}
+  "Header": {
+    "CatchPhrase": "Al 40 jaar dé kredietspecialist"
+  },
+  "Home": {
+    "title": "Doe mee met het feest!",
+    "subtitle": "40 Fujifilm Instax Mini Evo te winnen.",
+    "predescription": "Cofidis bestaat 40 jaar en ter gelegenheid daarvan,<br></br>ben jij deze keer de held!",
+    "description": "Doe mee aan ons jubileumspel en maak kans op een van de 40 <strong>Fujifilm Instax Mini Evo</strong>-toestellen.",
+    "CTA": "Ik waag mijn kans",
+    "imageAlt": "Afbeelding van een Fujifilm Instax Mini Evo-camera"
+  },
+  "Register": {
+    "title": "Nog enkele gegevens voor je het spel start<br></br>en je score registreert.",
+    "Madam": "Mevrouw",
+    "Sir": "Meneer",
+    "FirstName": "Voornaam",
+    "LastName": "Achternaam",
+    "Birthdate": "Geboortedatum",
+    "BirthdateSuffix": "(ouder dan 18)",
+    "acceptTerms": "Door deel te nemen verklaar ik dat ik het <ruleLink>wedstrijdreglement</ruleLink> en het <ruleLink>privacybeleid</ruleLink> van Cofidis heb gelezen en accepteer.",
+    "offersConfirmation": "Ik bevestig dat dit de contactgegevens zijn waarop Cofidis mij commerciële aanbiedingen mag sturen.",
+    "validationButton": "Bevestigen"
+  },
+  "Footer": {
+    "LegalNotice": "Juridische vermeldingen",
+    "Cookies": "Cookies",
+    "Rules": "Wedstrijdreglement"
+  },
+  "game": {
+    "loading": "Laden...",
+    "errorLoadingProgress": "Fout bij het laden",
+    "pleaseTryAgainLater": "Kan je voortgang niet laden. Vernieuw de pagina.",
+    "inProgress": "Hallo",
+    "completed": "Goed gedaan",
+    "levelCompleted": "Level {level} voltooid! Ga zo door.",
+    "finalLevel": "Je bent tot het einde geraakt! Tijd voor de laatste stap.",
+    "inProgressDescription": "Ga mee op reis door 40 jaar Cofidis met Sunny Marie en verzamel zoveel mogelijk zonnetjes.",
+    "startOrContinueGame": "Verdergaan"
+  },
+  "thanks": {
+    "loading": "Laden...",
+    "subsidaryQuestion": "Schiftingsvraag",
+    "subsidaryInstruction": "Wat is het totale gewicht van de objecten op deze afbeelding?",
+    "thankYou": "BEDANKT VOOR JE DEELNAME",
+    "seeYouSoon": "aan dit avontuur!",
+    "contactYouSoon": "We nemen contact met je op als je een van de winnaars bent om de prijs persoonlijk te overhandigen.",
+    "betterScore": "Mijn score verbeteren",
+    "subsidaryPlaceholder": "Gram"
+  }
 }

@@ -1,6 +1,7 @@
 "use client";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import Input from "@/components/Input";
 import ArrowYellow from "@/components/svg/ArrowYellow";
 import Button from "@/components/Button";
@@ -11,6 +12,7 @@ const Page: NextPage = () => {
   const [progress, setProgress] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [subsidaryShown, setSubsidaryShown] = useState(false);
+  const t = useTranslations("thanks");
   useEffect(() => {
     fetch("/api/getProgress")
       .then((res) => {
@@ -62,7 +64,7 @@ const Page: NextPage = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>{t("loading")}</div>;
   }
 
   return (
@@ -70,10 +72,10 @@ const Page: NextPage = () => {
       {subsidaryShown && (
         <div className="flex flex-col justify-center items-center pt-10">
           <h2 className="decoratedYellow text-2xl mb-5">
-            Question subsidiaire
+            {t("subsidaryQuestion")}
           </h2>
           <p className=" font-light text-xl mb-10">
-            Quel est le poids total des objets présents sur cette image ?
+            {t("subsidaryInstruction")}
           </p>
           <div className=" size-96">
             <img
@@ -83,7 +85,7 @@ const Page: NextPage = () => {
             />
             <form onSubmit={handleSubmit}>
               <Input
-                placeholder="Grammes"
+                placeholder={t("subsidaryPlaceholder")}
                 className="mt-5 mb-5 py-2 px-5 w-full"
                 suffixe={<ArrowYellow />}
                 suffixeIsSubmit
@@ -97,17 +99,16 @@ const Page: NextPage = () => {
           <div className="flex items-center justify-center font-sans">
             <section className="items-start flex flex-col mr-20">
               <h1 className="text-4xl font-medium mb-1 decoratedRed py-2">
-                MERCI D'AVOIR PARTICIPE
+                {t("thankYou")}
               </h1>
               <h1 className="text-3xl font-medium mb-8 ml-16 decoratedYellow py-3">
-                à cette aventure !
+                {t("seeYouSoon")}
               </h1>
               <p className="text-lg font-light text-black max-w-md">
-                Nous vous contacterons si vous faites partie des gagnants pour
-                vous remettre le prix en main propre.
+                {t("contactYouSoon")}
               </p>
               <Button redirect="" className="mt-4">
-                Améliorer mon score
+                {t("betterScore")}
               </Button>
             </section>
             <section>

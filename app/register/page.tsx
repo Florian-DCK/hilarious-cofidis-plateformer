@@ -151,7 +151,7 @@ const Page: NextPage = () => {
                 validity.civility === false ? " border border-red-600" : ""
               }`}
             ></span>
-            Madame
+            {t("Madam")}
           </label>
           <label className="flex items-center gap-2 cursor-pointer relative">
             <input
@@ -166,12 +166,12 @@ const Page: NextPage = () => {
                 validity.civility === false ? " border border-red-600" : ""
               }`}
             ></span>
-            Monsieur
+            {t("Sir")}
           </label>
         </div>
         <div className="flex gap-16">
           <Input
-            placeholder="Prénom"
+            placeholder={t("FirstName")}
             name="firstname"
             required
             successIcon={<Success />}
@@ -181,7 +181,7 @@ const Page: NextPage = () => {
             className={validity.firstname === false ? "error-animate" : ""}
           />
           <Input
-            placeholder="Nom"
+            placeholder={t("LastName")}
             name="lastname"
             required
             successIcon={<Success />}
@@ -204,10 +204,10 @@ const Page: NextPage = () => {
             className={validity.email === false ? "error-animate" : ""}
           />
           <Input
-            placeholder="Date de naissance"
+            placeholder={t("Birthdate")}
             name="birthdate"
             type="date"
-            suffixe="(+ de 18 ans)"
+            suffixe={t("BirthdateSuffix")}
             required
             successIcon={<Success />}
             errorIcon={<Error />}
@@ -244,7 +244,7 @@ const Page: NextPage = () => {
               />
             </span>
             <span>
-              En participant, je reconnais avoir lu et accepté le{" "}
+              {/* En participant, je reconnais avoir lu et accepté le{" "}
               <a href="#" className="underline">
                 règlement
               </a>{" "}
@@ -252,7 +252,14 @@ const Page: NextPage = () => {
               <a href="#" className="font-bold underline">
                 politique de confidentialité
               </a>{" "}
-              de Cofidis.
+              de Cofidis. */}
+              {t.rich("acceptTerms", {
+                ruleLink: (children) => (
+                  <a href="#" className="underline font-bold">
+                    {children}
+                  </a>
+                ),
+              })}
             </span>
           </label>
           <label className="flex items-start gap-2 flex-1 text-sm">
@@ -280,14 +287,11 @@ const Page: NextPage = () => {
                 }
               />
             </span>
-            <span>
-              Je confirme qu’il s’agit bien des moyens de contact sur lesquels
-              Cofidis pourrait m’envoyer des offres commerciales.
-            </span>
+            <span>{t("offersConfirmation")}</span>
           </label>
         </div>
         <Button className="w-min mx-auto" type="submit">
-          Valider
+          {t("validationButton")}
         </Button>
       </form>
       <Footer />

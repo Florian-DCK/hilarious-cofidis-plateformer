@@ -1,6 +1,7 @@
 "use client";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import LevelCard from "@/components/LevelCard";
 import RewardCard from "@/components/RewardCard";
 import StarsCounter from "@/components/StarsCounter";
@@ -9,7 +10,7 @@ import Button from "@/components/Button";
 const Page: NextPage = () => {
   const [progress, setProgress] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-
+  const t = useTranslations("game");
   useEffect(() => {
     fetch("/api/getProgress")
       .then((res) => {
@@ -40,7 +41,7 @@ const Page: NextPage = () => {
   if (loading) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen">
-        <div className="text-2xl font-medium mb-8">Chargement...</div>
+        <div className="text-2xl font-medium mb-8">{t("loading")}</div>
       </div>
     );
   }
@@ -50,10 +51,10 @@ const Page: NextPage = () => {
     return (
       <div className="flex flex-col justify-center items-center">
         <h2 className="text-2xl font-medium mb-8 decoratedYellow px-10 decoratedYellow mt-15">
-          Erreur de chargement
+          {t("errorLoadingProgress")}
         </h2>
         <p className="text-md text-black max-w-xl text-center">
-          Impossible de charger vos progrès. Veuillez rafraîchir la page.
+          {t("pleaseTryAgainLater")}
         </p>
       </div>
     );
@@ -68,16 +69,18 @@ const Page: NextPage = () => {
   return (
     <div className="flex flex-col justify-center items-center">
       <h2 className=" text-2xl font-medium mb-8 decoratedYellow px-10 decoratedYellow mt-15">
-        {progress && !progress.levels[0].completed ? `Bonjour` : "Bravo"}
+        {progress && !progress.levels[0].completed
+          ? t("inProgress")
+          : t("completed")}
       </h2>
       <p className="text-md text-black max-w-xl text-center">
         {progress && !progress.levels[0].completed
-          ? `Embarquez dans un voyage à travers les 40 ans de Cofidis avec Sunny Marie et collectez un maximum de soleils.`
+          ? t("inProgressDescription")
           : progress.nextLevel
-          ? `Niveau ${
-              parseInt(progress.nextLevel) - 1
-            } terminé ! Continuez comme ça.`
-          : `Vous êtes arrivé au bout ! Passons à l'étape finale.`}
+          ? t("levelCompleted", {
+              level: parseInt(progress.nextLevel) - 1,
+            })
+          : t("finalLevel")}
       </p>
       <div className="flex gap-7">
         <LevelCard
@@ -135,7 +138,7 @@ const Page: NextPage = () => {
         }
         className="mt-10 mb-20"
       >
-        Continuer
+        {t("startOrContinueGame")}
       </Button>
     </div>
   );

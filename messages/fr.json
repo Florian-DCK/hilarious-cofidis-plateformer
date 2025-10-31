@@ -1,16 +1,51 @@
 {
-	"Header": {
-		"CatchPhrase": "L'expert du crédit depuis 40 ans"
-	},
-	"Home": {
-		"title": "Prenez part à la fête ! ",
-		"subtitle": "40 Fujifilm Instax Mini Evo à gagner.",
-		"predescription": "Cofidis a 40 ans et pour l'occasion,<br></br>le héros, c'est vous !",
-		"description": "Participez à notre jeu-concours anniversaire pour repartir avec l'un des 40 appareils <strong>Fujifilm Instax Mini Evo</strong>.",
-		"CTA": "Je tente ma chance",
-		"imageAlt": "Image d'un appareil photo Fujifilm Instax Mini Evo"
-	},
-	"Register": {
-		"title": "Quelques détails avant d'entrer dans le jeu<br></br>et d'enregistrer votre score."
-	}
+  "Header": {
+    "CatchPhrase": "L'expert du crédit depuis 40 ans"
+  },
+  "Home": {
+    "title": "Prenez part à la fête ! ",
+    "subtitle": "40 Fujifilm Instax Mini Evo à gagner.",
+    "predescription": "Cofidis a 40 ans et pour l'occasion,<br></br>le héros, c'est vous !",
+    "description": "Participez à notre jeu-concours anniversaire pour repartir avec l'un des 40 appareils <strong>Fujifilm Instax Mini Evo</strong>.",
+    "CTA": "Je tente ma chance",
+    "imageAlt": "Image d'un appareil photo Fujifilm Instax Mini Evo"
+  },
+  "Register": {
+    "title": "Quelques détails avant d'entrer dans le jeu<br></br>et d'enregistrer votre score.",
+    "Madam": "Madame",
+    "Sir": "Monsieur",
+    "FirstName": "Prénom",
+    "LastName": "Nom",
+    "Birthdate": "Date de naissance",
+    "BirthdateSuffix": "(+ de 18 ans)",
+    "acceptTerms": "En participant, je reconnais avoir lu et accepté le <ruleLink>règlement</ruleLink>. du concours et <ruleLink>la politique de confidentialité</ruleLink> de Cofidis.",
+    "offersConfirmation": "Je confirme qu’il s’agit bien des moyens de contact sur lesquels Cofidis pourrait m’envoyer des offres commerciales.",
+    "validationButton": "Valider"
+  },
+  "Footer": {
+    "LegalNotice": "Mentions légales",
+    "Cookies": "Cookies",
+    "Rules": "Règlement"
+  },
+  "game": {
+    "loading": "Chargement...",
+    "errorLoadingProgress": "Erreur de chargement",
+    "pleaseTryAgainLater": "Impossible de charger vos progrès. Veuillez rafraîchir la page.",
+    "inProgress": "Bonjour",
+    "completed": "Bravo",
+    "levelCompleted": "Niveau {level} terminé ! Continuez comme ça.",
+    "finalLevel": "Vous êtes arrivé au bout ! Passons à l'étape finale.",
+    "inProgressDescription": "Embarquez dans un voyage à travers les 40 ans de Cofidis avec Sunny Marie et collectez un maximum de soleils.",
+    "startOrContinueGame": "Continuer"
+  },
+  "thanks": {
+    "loading": "Chargement...",
+    "subsidaryQuestion": "Question subsidiaire",
+    "subsidaryInstruction": "Quel est le poids total des objets présents sur cette image ?",
+    "thankYou": "MERCI D'AVOIR PARTICIPE",
+    "seeYouSoon": "à cette aventure !",
+    "contactYouSoon": "Nous vous contacterons si vous faites partie des gagnants pour vous remettre le prix en main propre.",
+    "betterScore": "Améliorer mon score",
+    "subsidaryPlaceholder": "Grammes"
+  }
 }
