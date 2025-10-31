@@ -41,7 +41,11 @@ const LanguageSwitch: FC = () => {
   ];
 
   return (
-    <div className="flex gap-4" role="group" aria-label="Language selector">
+    <div
+      className="flex gap-2 lg:gap-4"
+      role="group"
+      aria-label="Language selector"
+    >
       {languages.map(({ code, label }) => {
         const isActive = locale === code;
         const isLoading = pendingLocale === code && isPending;
