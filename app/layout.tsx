@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import localFont from "next/font/local";
 import { Pixelify_Sans } from "next/font/google";
 import { cookies } from "next/headers";
+import { ViewTransition } from "react";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -65,8 +66,10 @@ export default async function RootLayout({
     <html lang={locale}>
       <body className={` ${campton.variable} ${pixelify.variable} antialiased`}>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <Header />
-          {children}
+          <ViewTransition enter="slide-in">
+            <Header />
+            {children}
+          </ViewTransition>
         </NextIntlClientProvider>
       </body>
     </html>
