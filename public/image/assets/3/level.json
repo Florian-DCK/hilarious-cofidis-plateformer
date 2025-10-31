@@ -811,6 +811,28 @@
         }, 
         {
          "draworder":"topdown",
+         "id":8,
+         "name":"PlayerSpawn",
+         "objects":[
+                {
+                 "height":256,
+                 "id":45,
+                 "name":"PlayerSpawn",
+                 "rotation":0,
+                 "type":"PlayerSpawn",
+                 "visible":true,
+                 "width":256,
+                 "x":187.151515151515,
+                 "y":1153.81818181818
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "id":7,
          "name":"Flag",
          "objects":[
@@ -832,8 +854,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":8,
- "nextobjectid":45,
+ "nextlayerid":9,
+ "nextobjectid":46,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

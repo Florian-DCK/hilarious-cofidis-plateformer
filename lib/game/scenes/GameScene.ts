@@ -234,7 +234,23 @@ export class GameScene extends Phaser.Scene {
       );
     }
 
-    this.player = new Player(this, 100, 100, this.currentLevel);
+    const playerSpawnPoint = map.findObject(
+      "PlayerSpawn",
+      (obj: any) =>
+        (obj as any).name === "PlayerSpawn" ||
+        (obj as any).type === "PlayerSpawn"
+    ) as Phaser.Types.Tilemaps.TiledObject | undefined;
+
+    if (!playerSpawnPoint) {
+      console.warn(
+        "PlayerSpawn object not found in tilemap. Using default spawn position."
+      );
+    }
+
+    const spawnX = playerSpawnPoint?.x ?? 100;
+    const spawnY = playerSpawnPoint?.y ?? 100;
+
+    this.player = new Player(this, spawnX, spawnY, this.currentLevel);
 
     this.physics.add.collider(
       this.player,

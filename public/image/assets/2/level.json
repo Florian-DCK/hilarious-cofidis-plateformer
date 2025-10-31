@@ -5,8 +5,6 @@
         {
          "id":5,
          "image":"..\/..\/Downloads\/Level 6 (1).png",
-         "imageheight":1624,
-         "imagewidth":11683,
          "name":"fond",
          "offsetx":-245,
          "offsety":0,
@@ -19,8 +17,6 @@
         {
          "id":2,
          "image":"..\/..\/Downloads\/Level 6.png",
-         "imageheight":1624,
-         "imagewidth":11683,
          "name":"Plateformes",
          "opacity":1,
          "type":"imagelayer",
@@ -136,7 +132,7 @@
                  "y":1417
                 }, 
                 {
-                 "height":109.999966666667,
+                 "height":110,
                  "id":11,
                  "name":"",
                  "properties":[
@@ -472,6 +468,28 @@
         }, 
         {
          "draworder":"topdown",
+         "id":9,
+         "name":"PlayerSpawn",
+         "objects":[
+                {
+                 "height":256,
+                 "id":44,
+                 "name":"PlayerSpawn",
+                 "rotation":0,
+                 "type":"PlayerSpawn",
+                 "visible":true,
+                 "width":256,
+                 "x":148,
+                 "y":628
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "id":8,
          "name":"Flag",
          "objects":[
@@ -484,8 +502,8 @@
                  "type":"",
                  "visible":true,
                  "width":260,
-                 "x":11048.6666666667,
-                 "y":1361.33333333333
+                 "x":11048.7,
+                 "y":1361.33
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -544,7 +562,7 @@
                  "visible":true,
                  "width":136,
                  "x":4896,
-                 "y":366.333333333333
+                 "y":366.333
                 }, 
                 {
                  "gid":1,
@@ -555,8 +573,8 @@
                  "type":"",
                  "visible":true,
                  "width":136,
-                 "x":5821.66666666667,
-                 "y":916.333333333333
+                 "x":5821.67,
+                 "y":916.333
                 }, 
                 {
                  "gid":1,
@@ -568,7 +586,7 @@
                  "visible":true,
                  "width":136,
                  "x":6308,
-                 "y":915.666666666667
+                 "y":915.667
                 }, 
                 {
                  "gid":1,
@@ -734,8 +752,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":9,
- "nextobjectid":43,
+ "nextlayerid":10,
+ "nextobjectid":45,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
