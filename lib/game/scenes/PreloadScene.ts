@@ -15,6 +15,22 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   preload() {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("phaser-preload-start"));
+    }
+
+    const { width, height } = this.cameras.main;
+    this.cameras.main.setViewport(0, 0, width, height);
+    this.cameras.main.setRoundPixels(true);
+    this.cameras.main.setBackgroundColor("#fff");
+    this.cameras.main.fadeIn(250, 255, 255, 255);
+
+    this.load.once("complete", () => {
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("phaser-preload-complete"));
+      }
+    });
+
     this.load.image("level_bg", `/image/assets/${this.level}/plateformes.png`);
     this.load.image("clouds", `/image/assets/${this.level}/Clouds.png`);
     this.load.image("mountains", `/image/assets/${this.level}/bg-far.png`);
@@ -113,9 +129,33 @@ export class PreloadScene extends Phaser.Scene {
       hideOnComplete: false, // Garde la dernière frame visible
     });
 
-    this.scene.start("GameScene", {
-      level: parseInt(this.level),
-      startPaused: this.startPaused,
-    });
+    const startGameScene = () => {
+      this.scene.start("GameScene", {
+        level: parseInt(this.level),
+        startPaused: this.startPaused,
+      });
+    };
+
+    if (this.cameras.main === null) {
+      startGameScene();
+      return;
+    }
+
+    const fadeOnce = () => {
+      this.cameras.main.once(
+        Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
+        startGameScene
+      );
+      this.cameras.main.fadeOut(300, 255, 255, 255);
+    };
+
+    if (this.cameras.main.fadeEffect.isRunning) {
+      this.cameras.main.once(
+        Phaser.Cameras.Scene2D.Events.FADE_IN_COMPLETE,
+        fadeOnce
+      );
+    } else {
+      fadeOnce();
+    }
   }
 }

@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as Phaser from "phaser";
+import Brand from "@/components/svg/Brand";
 
 import { PreloadScene } from "@/lib/game/scenes/PreloadScene";
 import { GameScene } from "@/lib/game/scenes/GameScene";
@@ -15,6 +16,27 @@ interface PhaserGameProps {
 export default function PhaserGame({ level, paused = false }: PhaserGameProps) {
   const gameInstance = useRef<Phaser.Game | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const handleLoadingStart = () => setIsLoading(true);
+    const handleLoadingComplete = () => setIsLoading(false);
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("phaser-preload-start", handleLoadingStart);
+      window.addEventListener("phaser-preload-complete", handleLoadingComplete);
+    }
+
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("phaser-preload-start", handleLoadingStart);
+        window.removeEventListener(
+          "phaser-preload-complete",
+          handleLoadingComplete
+        );
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (gameInstance.current) return;
@@ -34,6 +56,7 @@ export default function PhaserGame({ level, paused = false }: PhaserGameProps) {
     const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
       parent: container ? container.id : "game-container",
+      backgroundColor: 0xffffff,
 
       scale: {
         mode: Phaser.Scale.RESIZE,
@@ -134,8 +157,15 @@ export default function PhaserGame({ level, paused = false }: PhaserGameProps) {
       style={{
         width: "100%",
         height: "300px",
-        position: "relative",
+        backgroundColor: "#fff",
+        overflow: "hidden",
       }}
-    />
+    >
+      {isLoading && (
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center items-center bg-white z-10">
+          <Brand />
+        </div>
+      )}
+    </div>
   );
 }

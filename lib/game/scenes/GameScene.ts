@@ -99,6 +99,9 @@ export class GameScene extends Phaser.Scene {
       this.platformDebugGraphics.destroy();
     }
 
+    this.cameras.main.setBackgroundColor("#fff");
+    this.cameras.main.fadeIn(350, 255, 255, 255);
+
     // Arrêter tous les tweens en cours
     this.tweens.killAll();
 
