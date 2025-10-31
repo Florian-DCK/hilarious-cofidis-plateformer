@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="1669" height="56" tilewidth="7" tileheight="29" infinite="0" nextlayerid="9" nextobjectid="46">
+ <editorsettings>
+  <export target="level-3.json" format="json"/>
+ </editorsettings>
+ <tileset firstgid="1" source="Sun.tsx"/>
+ <tileset firstgid="2" source="thunder.tsx"/>
+ <tileset firstgid="3" source="Flag.tsx"/>
+ <imagelayer id="4" name="Fond" offsetx="-259" offsety="0">
+  <image source="../../Downloads/Level 8.png" width="11683" height="1624"/>
+ </imagelayer>
+ <imagelayer id="2" name="Plateformes" offsetx="0" offsety="493">
+  <image source="../../Downloads/Level Design (1).png"/>
+ </imagelayer>
+ <objectgroup id="3" name="Collisions">
+  <object id="1" x="12.6667" y="1422.67" width="1695.33" height="186"/>
+  <object id="2" x="997.5" y="990.75" width="553.25" height="82.25">
+   <properties>
+    <property name="passable" value="true"/>
+   </properties>
+  </object>
+  <object id="3" x="1824.5" y="885.75" width="268.25" height="88.25">
+   <properties>
+    <property name="passable" value="true"/>
+   </properties>
+  </object>
+  <object id="4" x="2033" y="1424" width="755" height="184"/>
+  <object id="5" x="2276" y="1151" width="215" height="73">
+   <properties>
+    <property name="passable" value="true"/>
+   </properties>
+  </object>
+  <object id="6" x="2452" y="1036" width="539" height="55">
+   <properties>
+    <property name="passable" value="true"/>
+   </properties>
+  </object>
+  <object id="7" x="2927" y="1154" width="971" height="127">
+   <properties>
+    <property name="passable" value="true"/>
+   </properties>
+  </object>
+  <object id="8" x="3898.67" y="1042" width="426.333" height="112">
+   <properties>
+    <property name="passable" value="true"/>
+   </properties>
+  </object>
+  <object id="9" x="4282" y="1163.33" width="216" height="76">
+   <properties>
+    <property name="passable" value="true"/>
+   </properties>
+  </object>
+  <object id="10" x="3994" y="1410" width="743" height="198"/>
+  <object id="11" x="5014.5" y="1387" width="556" height="85.5">
+   <properties>
+    <property name="passable" value="true"/>
+   </properties>
+  </object>
+  <object id="12" x="5439" y="377" width="294.167" height="106.333">
+   <properties>
+    <property name="amplitude" value="600"/>
+    <property name="direction" value="vertical"/>
+    <property name="moving" value="true"/>
+    <property name="passable" value="true"/>
+    <property name="startingPosition" value="0"/>
+    <property name="texture" value="plateform1.png"/>
+   </properties>
+  </object>
+  <object id="13" x="5762.5" y="1231.5" width="283.5" height="87.5">
+   <properties>
+    <property name="passable" value="true"/>
+   </properties>
+  </object>
+  <object id="15" x="5975" y="969" width="350" height="87">
+   <properties>
+    <property name="passable" value="true"/>
+   </properties>
+  </object>
+  <object id="16" x="6212.33" y="1231.5" width="607" height="87">
+   <properties>
+    <property name="passable" value="true"/>
+   </properties>
+  </object>
+  <object id="17" x="6118" y="638" width="293.5" height="108.167">
+   <properties>
+    <property name="amplitude" value="500"/>
+    <property name="direction" value="horizontal"/>
+    <property name="moving" value="true"/>
+    <property name="passable" value="true"/>
+    <property name="startingPosition" value="0"/>
+    <property name="texture" value="plateform2.png"/>
+   </properties>
+  </object>
+  <object id="18" x="7245.67" y="1410.67" width="553.333" height="212"/>
+  <object id="19" x="7752" y="777" width="266.5" height="84">
+   <properties>
+    <property name="passable" value="true"/>
+   </properties>
+  </object>
+  <object id="20" x="8125.67" y="1233.33" width="285" height="88.3333">
+   <properties>
+    <property name="passable" value="true"/>
+   </properties>
+  </object>
+  <object id="21" x="8348.5" y="966" width="343.5" height="76">
+   <properties>
+    <property name="passable" value="true"/>
+   </properties>
+  </object>
+  <object id="22" x="8624" y="800" width="643" height="96">
+   <properties>
+    <property name="passable" value="true"/>
+   </properties>
+  </object>
+  <object id="23" x="8563" y="1233.33" width="644" height="88.5">
+   <properties>
+    <property name="passable" value="true"/>
+   </properties>
+  </object>
+  <object id="24" x="9087" y="951.667" width="369.333" height="76.6667">
+   <properties>
+    <property name="passable" value="true"/>
+   </properties>
+  </object>
+  <object id="25" x="9122" y="544" width="368" height="80.6667">
+   <properties>
+    <property name="passable" value="true"/>
+   </properties>
+  </object>
+  <object id="26" x="9419.33" y="814" width="284.667" height="89.3333">
+   <properties>
+    <property name="passable" value="true"/>
+   </properties>
+  </object>
+  <object id="27" x="9311" y="1233.33" width="647.333" height="97.3333">
+   <properties>
+    <property name="passable" value="true"/>
+   </properties>
+  </object>
+  <object id="28" x="10169.3" y="1408.5" width="1149.5" height="63.5">
+   <properties>
+    <property name="passable" value="true"/>
+   </properties>
+  </object>
+  <object id="44" x="3838.83" y="1042" width="58.9997" height="112"/>
+ </objectgroup>
+ <objectgroup id="5" name="Suns">
+  <object id="29" gid="1" x="1040.67" y="896.333" width="148" height="148"/>
+  <object id="30" gid="1" x="1884.5" y="810.25" width="148" height="148"/>
+  <object id="31" gid="1" x="3196.33" y="1090" width="148" height="148"/>
+  <object id="32" gid="1" x="4798.67" y="1057.33" width="148" height="148"/>
+  <object id="33" gid="1" x="5509.67" y="326" width="148" height="148"/>
+  <object id="34" gid="1" x="6640.33" y="560.333" width="148" height="148"/>
+  <object id="35" gid="1" x="7249.82" y="696.909" width="148" height="148"/>
+  <object id="36" gid="1" x="7812" y="696" width="148" height="148"/>
+  <object id="37" gid="1" x="8821.5" y="1138.5" width="148" height="148"/>
+  <object id="38" gid="1" x="10112.5" y="611.75" width="148" height="148"/>
+ </objectgroup>
+ <objectgroup id="6" name="Obstacles">
+  <object id="39" gid="2" x="2788" y="629" width="160" height="163">
+   <properties>
+    <property name="amplitude" value="600"/>
+    <property name="direction" value="vertical"/>
+    <property name="startingPosition" value="0"/>
+    <property name="type" value="thunder"/>
+   </properties>
+  </object>
+  <object id="40" gid="2" x="4559" y="654" width="160" height="163">
+   <properties>
+    <property name="amplitude" value="600"/>
+    <property name="direction" value="vertical"/>
+    <property name="startingPosition" value="0"/>
+    <property name="type" value="thunder"/>
+   </properties>
+  </object>
+  <object id="41" gid="2" x="7021" y="406" width="160" height="163">
+   <properties>
+    <property name="amplitude" value="1200"/>
+    <property name="direction" value="horizontal"/>
+    <property name="startingPosition" value="0"/>
+    <property name="type" value="thunder"/>
+   </properties>
+  </object>
+  <object id="42" gid="2" x="8848" y="348" width="160" height="163">
+   <properties>
+    <property name="amplitude" value="1200"/>
+    <property name="direction" value="horizontal"/>
+    <property name="startingPosition" value="0"/>
+    <property name="type" value="thunder"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="8" name="PlayerSpawn">
+  <object id="45" name="PlayerSpawn" type="PlayerSpawn" x="187.152" y="1153.82" width="256" height="256"/>
+ </objectgroup>
+ <objectgroup id="7" name="Flag">
+  <object id="43" gid="3" x="10999" y="1410" width="224" height="543"/>
+ </objectgroup>
+</map>
