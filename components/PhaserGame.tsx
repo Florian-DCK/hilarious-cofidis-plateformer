@@ -59,10 +59,10 @@ export default function PhaserGame({ level, paused = false }: PhaserGameProps) {
       scene: [PreloadScene, GameScene, UIScene],
     };
 
-  const game = new Phaser.Game(config);
+    const game = new Phaser.Game(config);
     gameInstance.current = game;
 
-  game.scene.start("PreloadScene", { level, startPaused: paused });
+    game.scene.start("PreloadScene", { level, startPaused: paused });
 
     const onResize = () => {
       const newHeight = computeAvailableHeight();
@@ -103,12 +103,14 @@ export default function PhaserGame({ level, paused = false }: PhaserGameProps) {
         return;
       }
 
-      const isPaused = typeof sceneManager.isPaused === "function"
-        ? sceneManager.isPaused(key)
-        : false;
-      const isActive = typeof sceneManager.isActive === "function"
-        ? sceneManager.isActive(key)
-        : false;
+      const isPaused =
+        typeof sceneManager.isPaused === "function"
+          ? sceneManager.isPaused(key)
+          : false;
+      const isActive =
+        typeof sceneManager.isActive === "function"
+          ? sceneManager.isActive(key)
+          : false;
 
       if (paused) {
         if (isActive && !isPaused) {

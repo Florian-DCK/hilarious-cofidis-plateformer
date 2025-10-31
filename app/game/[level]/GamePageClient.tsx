@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
 import GameLoader from "@/components/GameLoader";
@@ -9,7 +9,10 @@ interface GamePageClientProps {
   showTutorial: boolean;
 }
 
-export default function GamePageClient({ level, showTutorial }: GamePageClientProps) {
+export default function GamePageClient({
+  level,
+  showTutorial,
+}: GamePageClientProps) {
   const [isTutorialVisible, setIsTutorialVisible] = useState(showTutorial);
 
   useEffect(() => {
