@@ -110,6 +110,7 @@ export async function GET(request: Request) {
       levels: levelsStatus,
       nextLevel,
       finished,
+      subsidary: user.subsidary,
     });
   } finally {
     await prisma.$disconnect();
