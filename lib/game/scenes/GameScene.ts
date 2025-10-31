@@ -146,7 +146,7 @@ export class GameScene extends Phaser.Scene {
     this.bgMountains.setScrollFactor(0.75);
 
     this.bgTreesFar = this.add
-      .image(0, worldHeight, "trees")
+      .image(-200, worldHeight, "trees")
       .setOrigin(0, 1)
       .setScale(1.5);
     this.bgTreesFar.setScrollFactor(0.9);
@@ -229,7 +229,7 @@ export class GameScene extends Phaser.Scene {
       );
     }
 
-    this.player = new Player(this, 100, 100);
+    this.player = new Player(this, 100, 100, this.currentLevel);
 
     this.physics.add.collider(
       this.player,

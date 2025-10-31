@@ -34,7 +34,14 @@ export class PreloadScene extends Phaser.Scene {
       {
         frameWidth: 512,
         frameHeight: 512,
-        endFrame: this.level == "1" ? 4 : this.level == "2" ? 19 : undefined,
+        endFrame:
+          this.level == "1"
+            ? 4
+            : this.level == "2"
+            ? 19
+            : this.level == "3"
+            ? 9
+            : undefined,
       }
     );
 
@@ -76,12 +83,14 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   create() {
-    // Animation idle avec toutes les frames du spritesheet idle
+    // Animation idle avec effet yoyo et timing personnalisé
     this.anims.create({
       key: "player-idle",
       frames: this.anims.generateFrameNames("player-idle"),
-      frameRate: this.level == "2" ? 12 : 24,
+      duration: 2000, // Durée totale plus lente pour effet fluide
       repeat: -1,
+      yoyo: true, // Joue l'animation en avant puis en arrière
+      // repeatDelay: 200, // Petite pause entre les cycles pour effet naturel
     });
 
     // Animation running avec toutes les frames du spritesheet running
@@ -92,12 +101,13 @@ export class PreloadScene extends Phaser.Scene {
       repeat: -1,
     });
 
-    // Animation de saut (utilise la première frame du spritesheet idle)
+    // Animation de saut - se joue une fois et reste sur la dernière frame
     this.anims.create({
       key: "player-jump",
       frames: this.anims.generateFrameNames("player-jumping"),
       frameRate: 24,
-      repeat: -1,
+      repeat: 0, // Se joue une seule fois
+      hideOnComplete: false, // Garde la dernière frame visible
     });
 
     this.scene.start("GameScene", { level: parseInt(this.level) });
